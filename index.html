@@ -90,6 +90,80 @@
   .period-toggle button.active { color:#fff; background:var(--accent); }
   .period-label { font-size:11px; color:var(--text-muted); margin-left:12px; }
   .daily-na { color:var(--text-muted); font-style:italic; font-size:13px; }
+
+  /* ── SIGNAL GRID ── */
+  .signal-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:14px; }
+  .signal-card { border-radius:12px; padding:16px 18px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); position:relative; overflow:hidden; }
+  .signal-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:12px 12px 0 0; }
+  .card-green { box-shadow:0 0 28px rgba(34,197,94,0.07),0 2px 8px rgba(0,0,0,0.35); border-color:rgba(34,197,94,0.14); }
+  .card-green::before { background:linear-gradient(90deg,#059669,#34d399); }
+  .card-amber { box-shadow:0 0 28px rgba(245,158,11,0.07),0 2px 8px rgba(0,0,0,0.35); border-color:rgba(245,158,11,0.14); }
+  .card-amber::before { background:linear-gradient(90deg,#d97706,#fbbf24); }
+  .card-red { border-color:rgba(239,68,68,0.18); animation:redPulse 3s ease-in-out infinite; }
+  .card-red::before { background:linear-gradient(90deg,#991b1b,#ef4444); }
+  @keyframes redPulse {
+    0%,100% { box-shadow:0 0 28px rgba(239,68,68,0.12),0 2px 8px rgba(0,0,0,0.35); }
+    50% { box-shadow:0 0 44px rgba(239,68,68,0.26),0 2px 8px rgba(0,0,0,0.35); }
+  }
+  .sig-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .sig-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+  .label-green { color:#34d399; } .label-amber { color:#fbbf24; } .label-red { color:#ef4444; }
+  .sig-count { font-size:11px; font-weight:700; padding:2px 7px; border-radius:8px; }
+  .count-green { background:rgba(34,197,94,0.15); color:#34d399; }
+  .count-amber { background:rgba(245,158,11,0.15); color:#fbbf24; }
+  .count-red { background:rgba(239,68,68,0.18); color:#ef4444; }
+  .sig-item { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .sig-item:last-child { border-bottom:none; }
+  .sig-left { display:flex; align-items:center; gap:8px; }
+  .sig-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .dot-green { background:#34d399; } .dot-amber { background:#fbbf24; } .dot-red { background:#ef4444; }
+  .sig-name { font-size:12px; font-weight:500; color:#e4e4e7; }
+  .sig-tag { font-size:10px; color:var(--text-muted); }
+  .sig-val { font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .val-green { color:#34d399; } .val-amber { color:#fbbf24; } .val-red { color:#ef4444; }
+
+  /* ── PIPELINE STRIP ── */
+  .pipeline-strip { background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08)); border:1px solid rgba(99,102,241,0.28); border-radius:12px; padding:14px 18px; margin-bottom:14px; box-shadow:0 0 24px rgba(99,102,241,0.1),inset 0 1px 0 rgba(255,255,255,0.05); }
+  .pipeline-top { display:flex; align-items:center; gap:8px; margin-bottom:11px; }
+  .pipeline-icon { width:18px; height:18px; border:1.5px solid #818cf8; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .pipeline-hdr { font-size:12px; font-weight:700; letter-spacing:0.6px; color:#a5b4fc; text-transform:uppercase; }
+  .pipeline-sub { font-size:11px; color:rgba(165,180,252,0.55); margin-left:auto; }
+  .pipeline-pills { display:flex; gap:10px; flex-wrap:wrap; }
+  .p-pill { display:flex; align-items:center; gap:8px; background:rgba(99,102,241,0.14); border:1px solid rgba(99,102,241,0.3); border-radius:10px; padding:8px 14px; white-space:nowrap; }
+  .p-spin { width:9px; height:9px; border:1.5px solid rgba(129,140,248,0.2); border-top-color:#818cf8; border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+  .p-live { width:7px; height:7px; border-radius:50%; background:#34d399; box-shadow:0 0 6px #34d399; animation:pulse 2s infinite; flex-shrink:0; }
+  .p-name { font-size:12px; font-weight:600; color:#e0e7ff; }
+  .p-status { font-size:11px; color:#818cf8; padding-left:4px; border-left:1px solid rgba(99,102,241,0.3); }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ── RACETRACK CHART ── */
+  .racetrack-card { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:18px 20px; margin-bottom:24px; }
+  .racetrack-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+  .racetrack-title { font-size:14px; font-weight:600; }
+  .racetrack-legend { display:flex; gap:16px; font-size:11px; color:var(--text-muted); align-items:center; }
+  .leg-item { display:flex; align-items:center; gap:5px; }
+  .leg-dot { width:8px; height:8px; border-radius:50%; background:#34d399; }
+  .leg-dash { width:16px; border-bottom:2px dashed rgba(255,255,255,0.3); }
+  .leg-tick { color:rgba(255,255,255,0.35); font-size:11px; }
+  .track-row { display:flex; align-items:center; gap:12px; margin-bottom:13px; }
+  .track-lbl { width:132px; text-align:right; flex-shrink:0; }
+  .track-lbl-name { font-size:12px; font-weight:500; color:#e4e4e7; }
+  .track-lbl-val { font-size:10px; color:var(--text-muted); }
+  .track-outer { flex:1; position:relative; }
+  .track-bg { background:rgba(255,255,255,0.05); border-radius:99px; height:10px; position:relative; }
+  .track-fill { height:100%; border-radius:99px; }
+  .track-fill::after { content:''; position:absolute; right:-2px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; }
+  .fill-green { background:linear-gradient(90deg,#064e3b,#34d399); }
+  .fill-green::after { background:#34d399; box-shadow:0 0 8px #34d399,0 0 16px rgba(52,211,153,0.35); }
+  .fill-amber { background:linear-gradient(90deg,#78350f,#f59e0b); }
+  .fill-amber::after { background:#f59e0b; box-shadow:0 0 8px rgba(245,158,11,0.7); }
+  .fill-red { background:linear-gradient(90deg,#450a0a,#ef4444); }
+  .fill-red::after { background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,0.7); }
+  .track-today { position:absolute; top:-5px; width:1.5px; height:20px; background:rgba(255,255,255,0.35); pointer-events:none; z-index:2; }
+  .track-today::after { content:'TODAY'; position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:7px; color:rgba(255,255,255,0.45); letter-spacing:0.5px; white-space:nowrap; }
+  .track-target { position:absolute; top:-4px; width:2px; height:18px; border-left:2px dashed rgba(255,255,255,0.25); pointer-events:none; z-index:2; }
+  .track-pct { width:52px; text-align:right; font-size:12px; font-weight:700; flex-shrink:0; }
+  .pct-green { color:#34d399; } .pct-amber { color:#f59e0b; } .pct-red { color:#ef4444; }
 </style>
 </head>
 <body>
@@ -129,20 +203,50 @@
     </div>
     <span class="period-label" id="periodLabel">April 2026 Month-to-Date</span>
 
-    <div class="summary-box">
-      <h3>Daily Executive Brief &mdash; Where to Focus Today <span style="font-size:11px;font-weight:400;color:var(--text-muted);margin-left:8px;">Data as of Apr 13, 2026 &mdash; live refresh active</span></h3>
+    <!-- ── DAILY EXECUTIVE BRIEF (text narrative) ── -->
+    <div class="summary-box" id="execBrief">
+      <h3>Daily Executive Brief &mdash; Where to Focus Today <span style="font-size:11px;font-weight:400;color:var(--text-muted);margin-left:8px;" id="briefDate">Data as of Apr 15, 2026 &mdash; live refresh active</span></h3>
       <ul>
-        <li class="good"><strong>Grand Total NOW ABOVE target:</strong> P&amp;L $27.9K actual, EOM pacing $108.1K vs $107.4K target (+0.68%). Supply Book at +6.7%. First time above target this month.</li>
-        <li class="good"><strong>Demand Book gap further narrowed to -6.8%:</strong> LTV crushing target — pacing $45.1K vs $40.7K target (+10.8%). Remaining gap driven by 5 non-performing advertisers.</li>
-        <li class="good"><strong>5-day P&amp;L contribution: +$9.8K</strong> (Apr 8 → Apr 13). Demand LTV drove +$10.8K P&amp;L (+$95K rev); Edu LeadGen data adj -$1.1K. Total P&amp;L up 54% since Apr 8 snapshot.</li>
+        <li class="good"><strong>Grand Total above target:</strong> P&amp;L $45.3K actual, EOM pacing $108.1K vs $107.4K target (+0.68%). Supply Book at +6.7%.</li>
+        <li class="good"><strong>Demand Book LTV crushing target:</strong> Pacing $44.9K vs $40.7K target (+10.8%). Remaining gap driven by 5 non-performing advertisers.</li>
         <li class="good"><strong>YTD P&amp;L: $550.6K</strong> (Looker Studio, refreshed 4/13). Supply OR $468.5K, Demand OR $82.1K. Supply Book margin 15.7%.</li>
-        <li class="critical"><strong>BetterHelp &amp; HomeBuddy still not launched:</strong> Combined $5.7K monthly target at $0. 13 days in, gap is now permanent for these advertisers this month.</li>
-        <li class="critical"><strong>Lotlinx (Autos: Clicks) still Red:</strong> Pacing -$9K loss. Low fill rates persist. Optimize for form fills, reduce CPLs urgently.</li>
-        <li class="critical"><strong>Others vertical still bleeding:</strong> TAC 2.8x revenue. Pacing -$3.2K vs $2.1K target. LTV Bing S2S still not live.</li>
-        <li class="warning"><strong>Buyerlink, Digistore24 &amp; Successful Media TAC bleeding:</strong> Buyerlink $0 rev/$419 TAC, Digistore24 $0 rev/$179 TAC, Successful Media $0 rev/$92 TAC. Combined -$690 P&amp;L. Pause all.</li>
-        <li class="warning"><strong>3 Edu Red items remain:</strong> SNHU (-$533 pacing), Liberty (-$2.25K pacing), UOPX (-$1.9K pacing). Plus Zeta $40 still at $0 revenue.</li>
-        <li class="good"><strong>PTP remains the star:</strong> $5.5K actual (39% margin), pacing $32.7K vs $30K target (+9%). All publishers profitable.</li>
+        <li class="good"><strong>PTP remains the star:</strong> $13.4K actual (39% margin), pacing $33.4K vs $30K target (+11%). All publishers profitable.</li>
+        <li class="critical"><strong>Lotlinx (Autos: Clicks) still Red:</strong> Pacing -$6K loss. Low fill rates persist. Optimize for form fills, reduce CPLs urgently.</li>
+        <li class="critical"><strong>Others vertical bleeding:</strong> TAC exceeds revenue. LTV Bing S2S still not live.</li>
+        <li class="warning"><strong>Buyerlink &amp; Digistore24 TAC bleeding:</strong> Combined $0 rev / -$708 P&amp;L. Pause or resolve conversion tracking.</li>
+        <li class="warning"><strong>3 Edu Red items:</strong> SNHU (-$912), Liberty (-$1.7K), UOPX (-$1.6K). Increased GSN costs driving losses.</li>
       </ul>
+    </div>
+
+    <!-- ── AT A GLANCE — visual layer (Signal Grid + Pipeline + Pacing) ── -->
+    <div id="signalSection">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 10px;">
+        <span style="font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:0.6px;text-transform:uppercase;">At a Glance</span>
+        <span style="font-size:11px;color:var(--text-muted);" id="signalDate"></span>
+      </div>
+
+      <!-- Signal Grid — populated by renderSignalGrid() -->
+      <div id="signalGrid" class="signal-grid"></div>
+
+      <!-- Pipeline Strip — updated daily by SKILL.md automation -->
+      <div id="pipelineStrip" class="pipeline-strip">
+        <div class="pipeline-top">
+          <div class="pipeline-icon">
+            <svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="#818cf8" stroke-width="1.5"/></svg>
+          </div>
+          <span class="pipeline-hdr">In Flight &mdash; Not Yet in P&amp;L</span>
+          <span class="pipeline-sub" id="pipelineCount">4 initiatives active</span>
+        </div>
+        <div class="pipeline-pills" id="pipelinePills">
+          <div class="p-pill"><span class="p-live"></span><span class="p-name">BetterHelp</span><span class="p-status">Launched Apr 14</span></div>
+          <div class="p-pill"><span class="p-live"></span><span class="p-name">HomeBuddy New Prelander</span><span class="p-status">Live</span></div>
+          <div class="p-pill"><span class="p-spin"></span><span class="p-name">LTV Proxima Audience</span><span class="p-status">S2S integrating</span></div>
+          <div class="p-pill"><span class="p-spin"></span><span class="p-name">LTV FB VIN / Phone Search</span><span class="p-status">Activating</span></div>
+        </div>
+      </div>
+
+      <!-- Pacing Racetrack — populated by renderPacingRacetrack() -->
+      <div id="pacingRacetrack"></div>
     </div>
 
     <div class="kpi-row" id="overviewKpis"></div>
@@ -375,6 +479,97 @@ const $k = v => v == null ? 'N/A' : (Math.abs(v) >= 1000000 ? (v < 0 ? '-' : '')
 const plColor = v => v == null ? '' : v >= 0 ? 'color:var(--green)' : 'color:var(--red)';
 const ragClass = r => r === 'Red' ? 'status-critical' : r === 'Amber' ? 'status-warning' : r === 'Green' ? 'status-good' : '';
 
+// ==================== SIGNAL GRID ====================
+function renderSignalGrid(period) {
+  const wrap = document.getElementById('signalSection');
+  const el   = document.getElementById('signalGrid');
+  const dateEl = document.getElementById('signalDate');
+  if (!el || !wrap) return;
+  // Only show for MTD
+  wrap.style.display = period !== 'mtd' ? 'none' : '';
+  if (period !== 'mtd') return;
+  if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata',day:'numeric',month:'short',year:'numeric'});
+
+  // Collect all advertisers across verticals
+  const all = [];
+  (DATA.mtd.eduAdvertisers||[]).forEach(a=>all.push({...a,tag:a.sub==='Clicks'?'Edu Clicks':'Edu LG'}));
+  (DATA.mtd.autosAdvertisers||[]).forEach(a=>all.push({...a,tag:a.sub==='Clicks'?'Autos Clicks':'Autos LG'}));
+  (DATA.mtd.ptpPublishers||[]).forEach(a=>all.push({...a,tag:'PTP'}));
+  (DATA.mtd.demandAdvertisers||[]).forEach(a=>all.push({...a,tag:'Demand'}));
+  (DATA.mtd.othersAdvertisers||[]).forEach(a=>all.push({...a,tag:'Others'}));
+
+  const green = all.filter(a=>a.rag==='Green'&&a.pl>0).sort((a,b)=>b.pl-a.pl).slice(0,5);
+  const amber = all.filter(a=>a.rag==='Amber').sort((a,b)=>b.pl-a.pl).slice(0,5);
+  const red   = all.filter(a=>a.rag==='Red').sort((a,b)=>a.pl-b.pl).slice(0,5);
+
+  function sigVal(a,bucket) {
+    if (bucket==='amber') {
+      if (a.blocker&&/low.vol|low.fill|low.conv/i.test(a.blocker)) return 'Low vol';
+      if (a.blocker&&/rev.drop|revenue.drop/i.test(a.blocker)) return 'Rev ↓';
+      if (a.pacing!=null&&a.target!=null&&a.target!==0) {
+        const pct=((a.pacing-a.target)/Math.abs(a.target)*100).toFixed(1);
+        return (pct>0?'+':'')+pct+'% vs tgt';
+      }
+    }
+    if (a.pl==null) return 'N/A';
+    return (a.pl>=0?'+':'')+$k(a.pl);
+  }
+
+  function card(heading,cardCls,cntCls,lblCls,dotCls,valCls,items,bucket) {
+    const rows=items.map(a=>`<div class="sig-item"><div class="sig-left"><span class="sig-dot ${dotCls}"></span><span class="sig-name">${a.name}</span><span class="sig-tag">${a.tag}</span></div><span class="sig-val ${valCls}">${sigVal(a,bucket)}</span></div>`).join('');
+    return `<div class="signal-card ${cardCls}"><div class="sig-header"><span class="sig-label ${lblCls}">${heading}</span><span class="sig-count ${cntCls}">${items.length}</span></div>${rows||'<div style="font-size:12px;color:var(--text-muted);margin-top:8px;">No items</div>'}</div>`;
+  }
+
+  el.innerHTML =
+    card('● Winning','card-green','count-green','label-green','dot-green','val-green',green,'green')+
+    card('◐ Watch',  'card-amber','count-amber','label-amber','dot-amber','val-amber',amber,'amber')+
+    card('● Act Now','card-red',  'count-red',  'label-red',  'dot-red',  'val-red',  red,  'red');
+}
+
+// ==================== PACING RACETRACK ====================
+function renderPacingRacetrack(period) {
+  const el = document.getElementById('pacingRacetrack');
+  if (!el) return;
+  el.style.display = period !== 'mtd' ? 'none' : '';
+  if (period !== 'mtd') return;
+
+  const today = new Date();
+  const daysInMonth = new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
+  const todayPct = Math.round((today.getDate()/daysInMonth)*100);
+  const todayLabel = today.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+  const verts = (DATA.mtd.verticals||[]).filter(v=>v.pacing!=null&&v.target!=null);
+  const rows = verts.map(v=>{
+    const pct = v.target!==0 ? Math.round((v.pacing/v.target)*100) : null;
+    const cls = pct==null?'amber':pct>=100?'green':pct>=70?'amber':'red';
+    const maxVal = Math.max(Math.abs(v.pacing),Math.abs(v.target),1);
+    const fillPct = Math.min(Math.max(Math.abs(v.pacing)/maxVal*88,3),96);
+    const targetPct = Math.min(Math.max(Math.abs(v.target)/maxVal*88,10),94);
+    const icon = cls==='green'?'✓':cls==='amber'?'●':'▼';
+    return {v,pct,cls,fillPct,targetPct,icon};
+  }).sort((a,b)=>(b.pct||0)-(a.pct||0));
+
+  el.innerHTML = `<div class="racetrack-card">
+    <div class="racetrack-hdr">
+      <span class="racetrack-title">P&amp;L Pacing — Where will each vertical end the month?</span>
+      <div class="racetrack-legend">
+        <span class="leg-item"><span class="leg-dot"></span>Actual MTD</span>
+        <span class="leg-item"><span class="leg-dash"></span>EOM Target</span>
+        <span class="leg-tick">│ Today (${todayLabel})</span>
+      </div>
+    </div>
+    ${rows.map((r,i)=>`<div class="track-row"${i===rows.length-1?' style="margin-bottom:0"':''}>
+      <div class="track-lbl"><div class="track-lbl-name">${r.v.name}</div><div class="track-lbl-val">${$k(r.v.pl)} actual</div></div>
+      <div class="track-outer"><div class="track-bg">
+        <div class="track-fill fill-${r.cls}" style="width:${r.fillPct}%"></div>
+        <div class="track-today" style="left:${todayPct}%"></div>
+        <div class="track-target" style="left:${r.targetPct}%"></div>
+      </div></div>
+      <div class="track-pct pct-${r.cls}">${r.pct!=null?r.pct+'%':'N/A'} ${r.icon}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
 // ==================== RENDER: EXECUTIVE OVERVIEW ====================
 let currentPeriod = 'mtd';
 let currentChart1 = null, currentChart2 = null;
@@ -447,6 +642,8 @@ function renderOverview(period) {
   document.getElementById('chartTitle1').textContent = `P&L by Vertical (${d.period})`;
   document.getElementById('chartTitle2').textContent = `Net Revenue vs TAC (${d.period})`;
   renderOverviewCharts(verts, d.period);
+  renderSignalGrid(period);
+  renderPacingRacetrack(period);
 }
 
 function renderOverviewCharts(verts, label) {
