@@ -641,13 +641,25 @@ renderOverview('mtd');
 fetch('data.json?v=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('no data.json'); return r.json(); })
   .then(live => {
+    // Safety guard: only apply live data if the refresh actually produced real numbers.
+    // If the sheet was inaccessible (e.g. private), the script writes zeros — in that
+    // case we silently keep the embedded data rather than overwriting with zeroes.
+    const hasRealData = live.mtd && live.mtd.overview && live.mtd.overview.netRev > 0;
+    if (!hasRealData) return;
+
     // Merge MTD overview numbers
-    if (live.mtd && live.mtd.overview) Object.assign(DATA.mtd.overview, live.mtd.overview);
+    Object.assign(DATA.mtd.overview, live.mtd.overview);
     // Replace advertiser detail arrays if script produced them
-    if (live.mtd && live.mtd.eduAdvertisers   && live.mtd.eduAdvertisers.length)
+    if (live.mtd.eduAdvertisers   && live.mtd.eduAdvertisers.length)
       DATA.mtd.eduAdvertisers   = live.mtd.eduAdvertisers;
-    if (live.mtd && live.mtd.autosAdvertisers && live.mtd.autosAdvertisers.length)
+    if (live.mtd.autosAdvertisers && live.mtd.autosAdvertisers.length)
       DATA.mtd.autosAdvertisers = live.mtd.autosAdvertisers;
+    if (live.mtd.ptpPublishers    && live.mtd.ptpPublishers.length)
+      DATA.mtd.ptpPublishers    = live.mtd.ptpPublishers;
+    if (live.mtd.demandAdvertisers && live.mtd.demandAdvertisers.length)
+      DATA.mtd.demandAdvertisers = live.mtd.demandAdvertisers;
+    if (live.mtd.othersAdvertisers && live.mtd.othersAdvertisers.length)
+      DATA.mtd.othersAdvertisers = live.mtd.othersAdvertisers;
     // Merge daily deltas
     if (live.daily) Object.assign(DATA.daily, live.daily);
     // Update timestamp
