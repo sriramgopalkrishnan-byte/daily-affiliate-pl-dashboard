@@ -1,6 +1,18 @@
 {
-  "lastUpdated": "Pending first automated refresh (runs daily at 1pm IST)",
-  "refreshDate": null,
-  "mtd": null,
+  "lastUpdated": "Auto-refreshed 15 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-15",
+  "mtd": {
+    "overview": {
+      "netRev": 0,
+      "tac": 0,
+      "pl": 0,
+      "supplyRev": 0,
+      "demandRev": 0,
+      "supplyPL": 0,
+      "demandPL": 0
+    },
+    "eduAdvertisers": [],
+    "autosAdvertisers": []
+  },
   "daily": null
 }

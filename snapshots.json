@@ -5,7 +5,7 @@
       "date": "2026-04-09",
       "capturedAt": "2026-04-09T18:00:00+05:30",
       "dataSource": "dashboard_html_baseline",
-      "note": "First snapshot. Chrome extension unavailable this run — data sourced from existing dashboard (reflects Apr 8 actuals). No delta available yet.",
+      "note": "First snapshot. Chrome extension unavailable this run \u2014 data sourced from existing dashboard (reflects Apr 8 actuals). No delta available yet.",
       "overview": {
         "netRev": 120634,
         "tac": 102530,
@@ -15,13 +15,55 @@
         "variancePct": -2.6
       },
       "verticals": [
-        { "book": "Supply", "name": "Edu: LeadGen",    "netRev": 30492, "tac": 26123, "pl": 4369  },
-        { "book": "Supply", "name": "Edu: Clicks",     "netRev": 7168,  "tac": 6484,  "pl": 683   },
-        { "book": "Supply", "name": "Autos: Clicks",   "netRev": 5502,  "tac": 4138,  "pl": 1365  },
-        { "book": "Supply", "name": "Autos: LeadGen",  "netRev": 1496,  "tac": 1278,  "pl": 218   },
-        { "book": "Supply", "name": "PTP",             "netRev": 14012, "tac": 8560,  "pl": 5452  },
-        { "book": "Supply", "name": "Others",          "netRev": 481,   "tac": 1368,  "pl": -886  },
-        { "book": "Demand", "name": "Ad.Tech",         "netRev": 61482, "tac": 54578, "pl": 6904  }
+        {
+          "book": "Supply",
+          "name": "Edu: LeadGen",
+          "netRev": 30492,
+          "tac": 26123,
+          "pl": 4369
+        },
+        {
+          "book": "Supply",
+          "name": "Edu: Clicks",
+          "netRev": 7168,
+          "tac": 6484,
+          "pl": 683
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: Clicks",
+          "netRev": 5502,
+          "tac": 4138,
+          "pl": 1365
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: LeadGen",
+          "netRev": 1496,
+          "tac": 1278,
+          "pl": 218
+        },
+        {
+          "book": "Supply",
+          "name": "PTP",
+          "netRev": 14012,
+          "tac": 8560,
+          "pl": 5452
+        },
+        {
+          "book": "Supply",
+          "name": "Others",
+          "netRev": 481,
+          "tac": 1368,
+          "pl": -886
+        },
+        {
+          "book": "Demand",
+          "name": "Ad.Tech",
+          "netRev": 61482,
+          "tac": 54578,
+          "pl": 6904
+        }
       ]
     },
     {
@@ -38,14 +80,118 @@
         "variancePct": -0.1
       },
       "verticals": [
-        { "book": "Supply", "name": "Edu: LeadGen",    "netRev": 29428, "tac": 26123, "pl": 3305  },
-        { "book": "Supply", "name": "Edu: Clicks",     "netRev": 7168,  "tac": 6484,  "pl": 683   },
-        { "book": "Supply", "name": "Autos: Clicks",   "netRev": 5502,  "tac": 4138,  "pl": 1365  },
-        { "book": "Supply", "name": "Autos: LeadGen",  "netRev": 1496,  "tac": 1278,  "pl": 218   },
-        { "book": "Supply", "name": "PTP",             "netRev": 14012, "tac": 8560,  "pl": 5452  },
-        { "book": "Supply", "name": "Others",          "netRev": 481,   "tac": 1368,  "pl": -886  },
-        { "book": "Demand", "name": "Ad.Tech",         "netRev": 117105,"tac": 104000,"pl": 13105 }
+        {
+          "book": "Supply",
+          "name": "Edu: LeadGen",
+          "netRev": 29428,
+          "tac": 26123,
+          "pl": 3305
+        },
+        {
+          "book": "Supply",
+          "name": "Edu: Clicks",
+          "netRev": 7168,
+          "tac": 6484,
+          "pl": 683
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: Clicks",
+          "netRev": 5502,
+          "tac": 4138,
+          "pl": 1365
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: LeadGen",
+          "netRev": 1496,
+          "tac": 1278,
+          "pl": 218
+        },
+        {
+          "book": "Supply",
+          "name": "PTP",
+          "netRev": 14012,
+          "tac": 8560,
+          "pl": 5452
+        },
+        {
+          "book": "Supply",
+          "name": "Others",
+          "netRev": 481,
+          "tac": 1368,
+          "pl": -886
+        },
+        {
+          "book": "Demand",
+          "name": "Ad.Tech",
+          "netRev": 117105,
+          "tac": 104000,
+          "pl": 13105
+        }
+      ]
+    },
+    {
+      "date": "2026-04-15",
+      "capturedAt": "2026-04-15T13:00:00+05:30",
+      "dataSource": "github_actions_gviz",
+      "overview": {
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0
+      },
+      "verticals": [
+        {
+          "book": "Supply",
+          "name": "Edu: LeadGen",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Supply",
+          "name": "Edu: Clicks",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: Clicks",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: LeadGen",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Supply",
+          "name": "PTP",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Supply",
+          "name": "Others",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        },
+        {
+          "book": "Demand",
+          "name": "Ad.Tech",
+          "tac": 0,
+          "netRev": 0,
+          "pl": 0
+        }
       ]
     }
-  ]
+  ],
+  "lastUpdated": "2026-04-15"
 }
