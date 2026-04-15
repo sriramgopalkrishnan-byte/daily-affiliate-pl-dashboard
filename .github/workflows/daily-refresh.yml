@@ -1,0 +1,36 @@
+name: Daily P/L Dashboard Refresh
+
+on:
+  schedule:
+    - cron: '30 7 * * *'   # 1:00 PM IST = 07:30 UTC every day
+  workflow_dispatch:        # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # Needed to commit data.json + snapshots.json back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run dashboard refresh script
+        run: python scripts/refresh.py
+
+      - name: Commit and push updated files
+        run: |
+          git config user.name  "Dashboard Bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add data.json snapshots.json
+          git diff --staged --quiet && echo "No changes to commit" || \
+            git commit -m "Auto-refresh: $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+          git push

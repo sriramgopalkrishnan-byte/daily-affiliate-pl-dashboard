@@ -636,6 +636,27 @@ Chart.defaults.color = '#9ca3af';
 Chart.defaults.borderColor = 'rgba(42,45,58,0.5)';
 Chart.defaults.font.family = "'Inter',-apple-system,sans-serif";
 renderOverview('mtd');
+
+// ── Live data loader (GitHub Actions refreshes data.json daily at 1pm IST) ──
+fetch('data.json?v=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error('no data.json'); return r.json(); })
+  .then(live => {
+    // Merge MTD overview numbers
+    if (live.mtd && live.mtd.overview) Object.assign(DATA.mtd.overview, live.mtd.overview);
+    // Replace advertiser detail arrays if script produced them
+    if (live.mtd && live.mtd.eduAdvertisers   && live.mtd.eduAdvertisers.length)
+      DATA.mtd.eduAdvertisers   = live.mtd.eduAdvertisers;
+    if (live.mtd && live.mtd.autosAdvertisers && live.mtd.autosAdvertisers.length)
+      DATA.mtd.autosAdvertisers = live.mtd.autosAdvertisers;
+    // Merge daily deltas
+    if (live.daily) Object.assign(DATA.daily, live.daily);
+    // Update timestamp
+    if (live.lastUpdated)
+      document.getElementById('lastUpdated').textContent = live.lastUpdated;
+    // Re-render with fresh data
+    renderOverview(currentPeriod);
+  })
+  .catch(() => { /* silently fall back to embedded DATA — local file or first deploy */ });
 </script>
 </body>
 </html>
