@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Affiliate Team - Executive P&L Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117; --card: #1a1d27; --card-border: #2a2d3a; --text: #e4e4e7; --text-muted: #9ca3af;
+    --accent: #6366f1; --green: #22c55e; --red: #ef4444; --amber: #f59e0b; --blue: #3b82f6; --teal: #14b8a6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  .header { padding:20px 32px; border-bottom:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center; }
+  .header h1 { font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+  .header h1 span { color:var(--accent); }
+  .header-meta { display:flex; gap:16px; align-items:center; font-size:13px; color:var(--text-muted); }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .nav { display:flex; gap:4px; padding:12px 32px; border-bottom:1px solid var(--card-border); background:var(--card); overflow-x:auto; }
+  .nav button { background:none; border:1px solid transparent; color:var(--text-muted); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:500; white-space:nowrap; transition:all 0.2s; }
+  .nav button:hover { color:var(--text); background:rgba(99,102,241,0.1); }
+  .nav button.active { color:var(--accent); background:rgba(99,102,241,0.15); border-color:var(--accent); }
+  .container { padding:24px 32px; max-width:1600px; margin:0 auto; }
+  .kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:24px; }
+  .kpi { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .kpi.green::before { background:var(--green); } .kpi.red::before { background:var(--red); }
+  .kpi.amber::before { background:var(--amber); } .kpi.blue::before { background:var(--blue); }
+  .kpi.teal::before { background:var(--teal); }
+  .kpi-label { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+  .kpi-value { font-size:28px; font-weight:700; letter-spacing:-1px; }
+  .kpi-sub { font-size:12px; margin-top:6px; display:flex; align-items:center; gap:4px; }
+  .kpi-sub.up { color:var(--green); } .kpi-sub.down { color:var(--red); } .kpi-sub.neutral { color:var(--amber); }
+  .kpi-context { font-size:11px; color:var(--text-muted); margin-top:8px; padding-top:8px; border-top:1px solid var(--card-border); display:flex; gap:12px; }
+  .kpi-context span { display:flex; align-items:center; gap:3px; }
+  .section { margin-bottom:28px; }
+  .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .section-title { font-size:16px; font-weight:600; display:flex; align-items:center; gap:8px; }
+  .badge { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .badge-red { background:rgba(239,68,68,0.15); color:var(--red); }
+  .badge-green { background:rgba(34,197,94,0.15); color:var(--green); }
+  .badge-amber { background:rgba(245,158,11,0.15); color:var(--amber); }
+  .badge-blue { background:rgba(59,130,246,0.15); color:var(--blue); }
+  .table-wrap { background:var(--card); border:1px solid var(--card-border); border-radius:12px; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:rgba(99,102,241,0.08); text-align:left; padding:12px 16px; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); border-bottom:1px solid var(--card-border); white-space:nowrap; }
+  td { padding:10px 16px; border-bottom:1px solid rgba(42,45,58,0.5); white-space:nowrap; }
+  tr:last-child td { border-bottom:none; } tr:hover td { background:rgba(99,102,241,0.04); }
+  .status-critical { background:rgba(239,68,68,0.15); color:var(--red); padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; display:inline-block; }
+  .status-warning { background:rgba(245,158,11,0.15); color:var(--amber); padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; display:inline-block; }
+  .status-good { background:rgba(34,197,94,0.15); color:var(--green); padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; display:inline-block; }
+  .focus-high { background:rgba(239,68,68,0.12); color:var(--red); border:1px solid rgba(239,68,68,0.3); font-size:11px; font-weight:600; padding:3px 8px; border-radius:6px; display:inline-block; }
+  .focus-medium { background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.3); font-size:11px; font-weight:600; padding:3px 8px; border-radius:6px; display:inline-block; }
+  .focus-low { background:rgba(34,197,94,0.12); color:var(--green); border:1px solid rgba(34,197,94,0.3); font-size:11px; font-weight:600; padding:3px 8px; border-radius:6px; display:inline-block; }
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+  .chart-card { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:20px; }
+  .chart-card h3 { font-size:14px; font-weight:600; margin-bottom:16px; }
+  .chart-wrap { position:relative; height:260px; width:100%; }
+  .action-card { background:var(--card); border-left:4px solid var(--red); border-radius:0 12px 12px 0; padding:16px 20px; margin-bottom:10px; }
+  .action-card.medium { border-left-color:var(--amber); } .action-card.low { border-left-color:var(--blue); }
+  .action-title { font-size:14px; font-weight:600; margin-bottom:4px; }
+  .action-desc { font-size:12px; color:var(--text-muted); }
+  .action-owner { font-size:11px; color:var(--accent); margin-top:4px; }
+  .tab-content { display:none; } .tab-content.active { display:block; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:1200px) { .grid-2,.chart-grid { grid-template-columns:1fr; } }
+  @media (max-width:768px) { .kpi-row { grid-template-columns:1fr 1fr; } .container { padding:16px; } }
+  .vertical-tag { font-size:11px; padding:2px 8px; border-radius:6px; font-weight:500; }
+  .vt-edu { background:rgba(99,102,241,0.15); color:#818cf8; }
+  .vt-autos { background:rgba(20,184,166,0.15); color:var(--teal); }
+  .vt-ptp { background:rgba(245,158,11,0.15); color:var(--amber); }
+  .vt-demand { background:rgba(236,72,153,0.15); color:#ec4899; }
+  .vt-other { background:rgba(156,163,175,0.15); color:var(--text-muted); }
+  .sources-bar { padding:8px 32px; background:rgba(99,102,241,0.06); border-bottom:1px solid var(--card-border); font-size:11px; color:var(--text-muted); display:flex; gap:16px; align-items:center; }
+  .sources-bar a { color:var(--accent); text-decoration:none; } .sources-bar a:hover { text-decoration:underline; }
+  .summary-box { background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(20,184,166,0.1)); border:1px solid var(--card-border); border-radius:12px; padding:20px; margin-bottom:24px; }
+  .summary-box h3 { font-size:15px; font-weight:600; margin-bottom:10px; }
+  .summary-box ul { list-style:none; }
+  .summary-box li { padding:6px 0; font-size:13px; display:flex; align-items:flex-start; gap:8px; }
+  .summary-box li::before { content:''; width:6px; height:6px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .summary-box li.critical::before { background:var(--red); }
+  .summary-box li.warning::before { background:var(--amber); }
+  .summary-box li.good::before { background:var(--green); }
+  .summary-box li.info::before { background:var(--blue); }
+  .period-toggle { display:inline-flex; gap:2px; background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:3px; margin-bottom:20px; }
+  .period-toggle button { background:none; border:none; color:var(--text-muted); padding:7px 18px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:600; transition:all 0.2s; letter-spacing:0.3px; }
+  .period-toggle button:hover { color:var(--text); }
+  .period-toggle button.active { color:#fff; background:var(--accent); }
+  .period-label { font-size:11px; color:var(--text-muted); margin-left:12px; }
+  .daily-na { color:var(--text-muted); font-style:italic; font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Affiliate Team</span> &mdash; P&L Executive Dashboard</h1>
+  <div class="header-meta">
+    <span><span class="live-dot"></span> Last updated: <strong id="lastUpdated"></strong></span>
+  </div>
+</div>
+
+<div class="sources-bar">
+  <span>Data Sources:</span>
+  <a href="https://docs.google.com/spreadsheets/d/1TEhR-l5S_-u9Z2J7q7VeBWjmIKvg0mGVe1mdYvI6Dus/edit" target="_blank">P&L Book: Target vs Actuals</a>
+  <a href="https://lookerstudio.google.com/u/0/reporting/d53fd8de-bc5a-426e-9de7-8608d83268ae/page/p_3x35qsmi1d" target="_blank">Looker Studio Dashboard</a>
+</div>
+
+<nav class="nav">
+  <button class="active" onclick="showTab('overview')">Executive Overview</button>
+  <button onclick="showTab('education')">Education P&L</button>
+  <button onclick="showTab('autos')">Autos P&L</button>
+  <button onclick="showTab('ptp')">PTP P&L</button>
+  <button onclick="showTab('demand')">Demand Book</button>
+  <button onclick="showTab('others')">Others P&L</button>
+  <button onclick="showTab('actions')">Action Items</button>
+</nav>
+
+<div class="container">
+
+  <!-- ============ EXECUTIVE OVERVIEW ============ -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="period-toggle" id="overviewPeriodToggle">
+      <button class="active" onclick="setPeriod('mtd',this)">MTD</button>
+      <button onclick="setPeriod('ytd',this)">YTD</button>
+      <button onclick="setPeriod('daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="periodLabel">April 2026 Month-to-Date</span>
+
+    <div class="summary-box">
+      <h3>Daily Executive Brief &mdash; Where to Focus Today <span style="font-size:11px;font-weight:400;color:var(--text-muted);margin-left:8px;">Data as of Apr 13, 2026 &mdash; live refresh active</span></h3>
+      <ul>
+        <li class="good"><strong>Grand Total NOW ABOVE target:</strong> P&amp;L $27.9K actual, EOM pacing $108.1K vs $107.4K target (+0.68%). Supply Book at +6.7%. First time above target this month.</li>
+        <li class="good"><strong>Demand Book gap further narrowed to -6.8%:</strong> LTV crushing target — pacing $45.1K vs $40.7K target (+10.8%). Remaining gap driven by 5 non-performing advertisers.</li>
+        <li class="good"><strong>5-day P&amp;L contribution: +$9.8K</strong> (Apr 8 → Apr 13). Demand LTV drove +$10.8K P&amp;L (+$95K rev); Edu LeadGen data adj -$1.1K. Total P&amp;L up 54% since Apr 8 snapshot.</li>
+        <li class="good"><strong>YTD P&amp;L: $550.6K</strong> (Looker Studio, refreshed 4/13). Supply OR $468.5K, Demand OR $82.1K. Supply Book margin 15.7%.</li>
+        <li class="critical"><strong>BetterHelp &amp; HomeBuddy still not launched:</strong> Combined $5.7K monthly target at $0. 13 days in, gap is now permanent for these advertisers this month.</li>
+        <li class="critical"><strong>Lotlinx (Autos: Clicks) still Red:</strong> Pacing -$9K loss. Low fill rates persist. Optimize for form fills, reduce CPLs urgently.</li>
+        <li class="critical"><strong>Others vertical still bleeding:</strong> TAC 2.8x revenue. Pacing -$3.2K vs $2.1K target. LTV Bing S2S still not live.</li>
+        <li class="warning"><strong>Buyerlink, Digistore24 &amp; Successful Media TAC bleeding:</strong> Buyerlink $0 rev/$419 TAC, Digistore24 $0 rev/$179 TAC, Successful Media $0 rev/$92 TAC. Combined -$690 P&amp;L. Pause all.</li>
+        <li class="warning"><strong>3 Edu Red items remain:</strong> SNHU (-$533 pacing), Liberty (-$2.25K pacing), UOPX (-$1.9K pacing). Plus Zeta $40 still at $0 revenue.</li>
+        <li class="good"><strong>PTP remains the star:</strong> $5.5K actual (39% margin), pacing $32.7K vs $30K target (+9%). All publishers profitable.</li>
+      </ul>
+    </div>
+
+    <div class="kpi-row" id="overviewKpis"></div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3 id="chartTitle1">P&L by Vertical (April MTD Actual)</h3>
+        <div class="chart-wrap"><canvas id="plByVerticalChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 id="chartTitle2">Revenue Composition</h3>
+        <div class="chart-wrap"><canvas id="revenueCompChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-title" id="tableTitle">April MTD &mdash; P&L by Vertical</div></div>
+      <div class="table-wrap" id="overviewTable"></div>
+    </div>
+  </div>
+
+  <!-- ============ EDUCATION P&L ============ -->
+  <div id="tab-education" class="tab-content">
+    <div class="period-toggle" id="eduPeriodToggle">
+      <button class="active" onclick="setSubPeriod('edu','mtd',this)">MTD</button>
+      <button onclick="setSubPeriod('edu','ytd',this)">YTD</button>
+      <button onclick="setSubPeriod('edu','daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="eduPeriodLabel">April 2026 Month-to-Date</span>
+    <div class="kpi-row" id="eduKpis"></div>
+    <div class="section" id="eduTableSection"></div>
+  </div>
+
+  <!-- ============ AUTOS P&L ============ -->
+  <div id="tab-autos" class="tab-content">
+    <div class="period-toggle" id="autosPeriodToggle">
+      <button class="active" onclick="setSubPeriod('autos','mtd',this)">MTD</button>
+      <button onclick="setSubPeriod('autos','ytd',this)">YTD</button>
+      <button onclick="setSubPeriod('autos','daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="autosPeriodLabel">April 2026 Month-to-Date</span>
+    <div class="kpi-row" id="autosKpis"></div>
+    <div class="section" id="autosTableSection"></div>
+  </div>
+
+  <!-- ============ PTP P&L ============ -->
+  <div id="tab-ptp" class="tab-content">
+    <div class="period-toggle" id="ptpPeriodToggle">
+      <button class="active" onclick="setSubPeriod('ptp','mtd',this)">MTD</button>
+      <button onclick="setSubPeriod('ptp','ytd',this)">YTD</button>
+      <button onclick="setSubPeriod('ptp','daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="ptpPeriodLabel">April 2026 Month-to-Date</span>
+    <div class="kpi-row" id="ptpKpis"></div>
+    <div class="section" id="ptpTableSection"></div>
+  </div>
+
+  <!-- ============ DEMAND BOOK ============ -->
+  <div id="tab-demand" class="tab-content">
+    <div class="period-toggle" id="demandPeriodToggle">
+      <button class="active" onclick="setSubPeriod('demand','mtd',this)">MTD</button>
+      <button onclick="setSubPeriod('demand','ytd',this)">YTD</button>
+      <button onclick="setSubPeriod('demand','daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="demandPeriodLabel">April 2026 Month-to-Date</span>
+    <div class="kpi-row" id="demandKpis"></div>
+    <div class="section" id="demandTableSection"></div>
+  </div>
+
+  <!-- ============ OTHERS P&L ============ -->
+  <div id="tab-others" class="tab-content">
+    <div class="period-toggle" id="othersPeriodToggle">
+      <button class="active" onclick="setSubPeriod('others','mtd',this)">MTD</button>
+      <button onclick="setSubPeriod('others','ytd',this)">YTD</button>
+      <button onclick="setSubPeriod('others','daily',this)">Daily</button>
+    </div>
+    <span class="period-label" id="othersPeriodLabel">April 2026 Month-to-Date</span>
+    <div class="kpi-row" id="othersKpis"></div>
+    <div class="section" id="othersTableSection"></div>
+  </div>
+
+  <!-- ============ ACTION ITEMS ============ -->
+  <div id="tab-actions" class="tab-content">
+    <h2 style="margin-bottom:20px; font-size:18px;">Prioritized Action Items</h2>
+
+    <div class="section">
+      <div class="section-header"><div class="section-title">P1 &mdash; Immediate <span class="badge badge-red">7 items</span></div></div>
+      <div class="action-card"><div class="action-title">Fix Demand Book Ad.Tech underperformance</div><div class="action-desc">Pacing $43.8K vs $47.9K target (-8.6%, improved from -14.4%). LTV now beating target at $44.5K pacing. Remaining gap: BetterHelp &amp; HomeBuddy not launched, Buyerlink &amp; Digistore24 TAC bleeding.</div><div class="action-owner">Vertical: Demand Book</div></div>
+      <div class="action-card"><div class="action-title">Launch BetterHelp &amp; HomeBuddy (Demand Book)</div><div class="action-desc">Combined target of $5.7K/month sitting at $0. These are new advertisers that need immediate activation.</div><div class="action-owner">Vertical: Demand Book</div></div>
+      <div class="action-card"><div class="action-title">Optimize Lotlinx for form fills, reduce CPLs</div><div class="action-desc">Red in both March (-$3.7K) and April (pacing -$9K). Low fill rates persistent.</div><div class="action-owner">Vertical: Autos Clicks</div></div>
+      <div class="action-card"><div class="action-title">Others vertical: Halt or restructure loss-making campaigns</div><div class="action-desc">All 3 active advertisers (Homebuddy, LTV, Money Group) are loss-making. TAC exceeds revenue 2.8x. Consider pausing until economics work.</div><div class="action-owner">Vertical: Others</div></div>
+      <div class="action-card"><div class="action-title">SNHU: Follow up on Moonshot re-launch</div><div class="action-desc">Lost -$3,837 in March. April pacing -$533. Overdue since 1-Apr.</div><div class="action-owner">Vertical: Edu LeadGen</div></div>
+      <div class="action-card"><div class="action-title">Zeta - UAGC: Launch 3P traffic urgently</div><div class="action-desc">Lost -$4,277 in March. April pacing -$1,524. Not viable on 1P alone.</div><div class="action-owner">Vertical: Edu LeadGen</div></div>
+      <div class="action-card"><div class="action-title">Demand Book: Stop Buyerlink &amp; Digistore24 bleeding</div><div class="action-desc">Buyerlink: $0 revenue, $419 TAC (escalating from $220). Digistore24: $0 revenue, $179 TAC. Combined -$598 P&amp;L. Pause immediately or resolve adv landing page/redirection issues.</div><div class="action-owner">Vertical: Demand Book</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-title">P2 &mdash; This Week <span class="badge badge-amber">6 items</span></div></div>
+      <div class="action-card medium"><div class="action-title">Liberty: Find 3P supply to blend traffic</div><div class="action-desc">Pacing -$2,250 vs -$1,050 target. Limited Tier 3 supply.</div><div class="action-owner">Vertical: Edu LeadGen</div></div>
+      <div class="action-card medium"><div class="action-title">South: Scale 1P, reduce ASD dependency</div><div class="action-desc">March -$3,742. April recovering (pacing $1,283 vs $1K target).</div><div class="action-owner">Vertical: Edu LeadGen</div></div>
+      <div class="action-card medium"><div class="action-title">Autos LeadGen: Address low volumes across OEMs</div><div class="action-desc">All OEMs (Kia, VW, Audi, Jeep, Ram) flagged Amber with low volumes.</div><div class="action-owner">Vertical: Autos LeadGen</div></div>
+      <div class="action-card medium"><div class="action-title">PTP: Boost myhealthandwellnessinfo</div><div class="action-desc">Pacing $8.7K vs $10K target (87%). Second largest publisher but slightly behind. Others in the vertical are healthy.</div><div class="action-owner">Vertical: PTP</div></div>
+      <div class="action-card medium"><div class="action-title">Demand Book Money Group: Scale or restructure</div><div class="action-desc">April P&L $49 on $266 revenue. Pacing $294 vs $1,500 target (20%). Need to drive volume.</div><div class="action-owner">Vertical: Demand Book</div></div>
+      <div class="action-card medium"><div class="action-title">Others: Launch Successful Media (8th April)</div><div class="action-desc">Just launched, $200 target. Monitor early performance before scaling.</div><div class="action-owner">Vertical: Others</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-title">P3 &mdash; Monitor <span class="badge badge-blue">5 items</span></div></div>
+      <div class="action-card low"><div class="action-title">PTP: Protect the star vertical</div><div class="action-desc">Pacing $32.7K vs $30K target (+9%). symptoms.tips leading at $12.8K pacing. All 6 publishers profitable.</div><div class="action-owner">Vertical: PTP</div></div>
+      <div class="action-card low"><div class="action-title">Regent: Scale while maintaining margins</div><div class="action-desc">Consistent performer. Pacing $12.5K vs $11.4K target.</div><div class="action-owner">Vertical: Edu LeadGen</div></div>
+      <div class="action-card low"><div class="action-title">Volvo: Continue optimizing 1P traffic</div><div class="action-desc">Green. Pacing $13K vs $12.75K target.</div><div class="action-owner">Vertical: Autos Clicks</div></div>
+      <div class="action-card low"><div class="action-title">Demand LTV: Anchor performer, protect margins</div><div class="action-desc">$6.9K actual, pacing $41.2K vs $40.7K target. 99% of Demand Book revenue. Monitor concentration risk.</div><div class="action-owner">Vertical: Demand Book</div></div>
+      <div class="action-card low"><div class="action-title">PTP symptoms.tips: Strong performer, keep scaling</div><div class="action-desc">Pacing $12.8K (128% of $10K target). 39% margin. Top publisher in the vertical.</div><div class="action-owner">Vertical: PTP</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ==================== DATA LAYER ====================
+const DATA = {
+  mtd: {
+    label: 'April 2026 Month-to-Date',
+    period: 'Apr MTD',
+    overview: {
+      netRev: 214740, tac: 186853, pl: 27887, pacing: 108091, target: 107363, variance: 0.68,
+      supplyRev: 58088, demandRev: 156652, supplyPL: 10136, demandPL: 17750
+    },
+    verticals: [
+      { book:'Supply', name:'Edu: LeadGen', tag:'vt-edu', netRev:29428, tac:26123, pl:3305, pacing:23477, target:24138, variance:'-2.7%', focus:'Near Target', focusCls:'focus-medium' },
+      { book:'Supply', name:'Edu: Clicks', tag:'vt-edu', netRev:7168, tac:6484, pl:683, pacing:5000, target:5000, variance:'0.0%', focus:'On Track', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: Clicks', tag:'vt-autos', netRev:5502, tac:4138, pl:1365, pacing:4090, target:-250, variance:'-1,736%', focus:'Beating', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: LeadGen', tag:'vt-autos', netRev:1496, tac:1278, pl:218, pacing:1308, target:-1500, variance:'-187%', focus:'Beating', focusCls:'focus-low' },
+      { book:'Supply', name:'PTP', tag:'vt-ptp', netRev:14012, tac:8560, pl:5452, pacing:32711, target:30000, variance:'+9.0%', focus:'Star', focusCls:'focus-low' },
+      { book:'Supply', name:'Others', tag:'vt-other', netRev:481, tac:1368, pl:-886, pacing:-3152, target:2075, variance:'-252%', focus:'Critical', focusCls:'focus-high' },
+      { book:'Demand', name:'Ad.Tech', tag:'vt-demand', netRev:156652, tac:138902, pl:17750, pacing:44657, target:47900, variance:'-6.8%', focus:'Behind', focusCls:'focus-medium' },
+    ],
+    eduAdvertisers: [
+      { sub:'LeadGen', name:'Regent', target:11400, netRev:10640, tac:7674, pl:2967, pacing:12500, rag:'Green', blocker:'', action:'' },
+      { sub:'LeadGen', name:'SNHU', target:-2500, netRev:2850, tac:3063, pl:-213, pacing:-533, rag:'Red', blocker:'Lack of 1P traffic, no Tier 1 3P', action:'Awaiting Moonshot re-launch' },
+      { sub:'LeadGen', name:'South', target:1000, netRev:3719, tac:3229, pl:490, pacing:1283, rag:'Green', blocker:'', action:'' },
+      { sub:'LeadGen', name:'Liberty', target:-1050, netRev:2090, tac:2746, pl:-656, pacing:-2250, rag:'Red', blocker:'Limited Tier 3 supply', action:'Find 3P supply to blend' },
+      { sub:'LeadGen', name:'Post', target:9500, netRev:4752, tac:4220, pl:532, pacing:5480, rag:'Amber', blocker:'Pacing -42% vs target', action:'Review traffic allocation' },
+      { sub:'LeadGen', name:'MM - GCU', target:2375, netRev:314, tac:320, pl:-7, pacing:2675, rag:'Amber', blocker:'Low volume', action:'' },
+      { sub:'LeadGen', name:'MM - ASU', target:2344, netRev:3325, tac:2800, pl:525, pacing:2344, rag:'Green', blocker:'', action:'' },
+      { sub:'LeadGen', name:'Zeta - UAGC $180', target:3600, netRev:1026, tac:600, pl:426, pacing:3600, rag:'Green', blocker:'', action:'' },
+      { sub:'LeadGen', name:'Zeta - UAGC $40', target:750, netRev:0, tac:0, pl:0, pacing:275, rag:'Red', blocker:'No revenue yet', action:'Activate traffic' },
+      { sub:'LeadGen', name:'UOPX', target:-3281, netRev:713, tac:1471, pl:-759, pacing:-1896, rag:'Red', blocker:'CPL above revenue rate', action:'Review bid strategy' },
+      { sub:'Clicks', name:'Eddy', target:5000, netRev:7168, tac:6484, pl:683, pacing:5000, rag:'Green', blocker:'', action:'' },
+    ],
+    autosAdvertisers: [
+      { sub:'Clicks', name:'Lotlinx', target:-13000, netRev:1601, tac:2674, pl:-1073, pacing:-9000, rag:'Red', blocker:'Low Fill Rates' },
+      { sub:'Clicks', name:'Volvo', target:12750, netRev:3902, tac:1464, pl:2438, pacing:13090, rag:'Green', blocker:'' },
+      { sub:'LeadGen', name:'Hyundai', target:-1000, netRev:485, tac:392, pl:93, pacing:555, rag:'Amber', blocker:'High Scrub Rate' },
+      { sub:'LeadGen', name:'Kia', target:-1500, netRev:54, tac:52, pl:2, pacing:9, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'VW', target:0, netRev:314, tac:319, pl:-5, pacing:-29, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'Audi', target:-700, netRev:92, tac:73, pl:19, pacing:113, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'Jeep', target:400, netRev:221, tac:182, pl:39, pacing:234, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'Ram', target:400, netRev:306, tac:252, pl:54, pacing:324, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'Mitsubishi', target:700, netRev:17, tac:2, pl:16, pacing:93, rag:'Amber', blocker:'Low Volumes' },
+      { sub:'LeadGen', name:'Chrysler', target:200, netRev:9, tac:7, pl:2, pacing:9, rag:'Amber', blocker:'Low Volumes' },
+    ],
+    ptpPublishers: [
+      { name:'symptoms.tips', target:10000, netRev:5459, tac:3330, pl:2129, pacing:12775, rag:'Green', blocker:'' },
+      { name:'myhealthandwellnessinfo', target:10000, netRev:3631, tac:2178, pl:1453, pacing:8718, rag:'Amber', blocker:'Slightly behind target' },
+      { name:'NewsFranc24', target:4000, netRev:2210, tac:1463, pl:747, pacing:4484, rag:'Green', blocker:'' },
+      { name:'Future Stack', target:4000, netRev:1759, tac:1055, pl:704, pacing:4222, rag:'Green', blocker:'' },
+      { name:'MyHealthWisdom', target:500, netRev:339, tac:260, pl:79, pacing:473, rag:'Amber', blocker:'Low volumes' },
+      { name:'Others (PTP)', target:1500, netRev:615, tac:275, pl:340, pacing:2039, rag:'Green', blocker:'' },
+    ],
+    demandAdvertisers: [
+      { name:'LTV', target:40700, payout:'CPC', netRev:155654, tac:137599, pl:18056, pacing:45139, rag:'Green', blocker:'' },
+      { name:'ClickBank', target:0, payout:'CPA', netRev:480, tac:94, pl:386, pacing:1000, rag:'Green', blocker:'' },
+      { name:'Money Group', target:1500, payout:'CPA', netRev:518, tac:520, pl:-2, pacing:-5, rag:'Red', blocker:'Low volume' },
+      { name:'Buyerlink', target:0, payout:'CPL', netRev:0, tac:419, pl:-419, pacing:-1047, rag:'Red', blocker:'$0 revenue, TAC bleeding' },
+      { name:'Digistore24', target:0, payout:'CPA', netRev:0, tac:179, pl:-179, pacing:-200, rag:'Red', blocker:'$0 revenue, TAC bleeding' },
+      { name:'HomeBuddy', target:4200, payout:'CPL', netRev:0, tac:0, pl:0, pacing:0, rag:'Red', blocker:'Not launched yet' },
+      { name:'BetterHelp', target:1500, payout:'CPC', netRev:0, tac:0, pl:0, pacing:0, rag:'Red', blocker:'Not launched yet' },
+      { name:'LotLinx', target:0, payout:'CPC', netRev:0, tac:0, pl:0, pacing:0, rag:'Amber', blocker:'No data yet' },
+      { name:'Successful Media', target:0, payout:'CPA', netRev:0, tac:92, pl:-92, pacing:-230, rag:'Amber', blocker:'TAC bleeding, $0 revenue' },
+    ],
+    othersAdvertisers: [
+      { name:'Homebuddy - Perform', target:425, payout:'CPA', netRev:140, tac:356, pl:-216, pacing:-925, rag:'Amber', blocker:'Campaigns paused - adv landing page not working, tracking link changed' },
+      { name:'LTV', target:1260, payout:'CPC', netRev:303, tac:823, pl:-520, pacing:-2227, rag:'Amber', blocker:'Bing S2S not yet live, low CPC on campaign' },
+      { name:'Money Group', target:190, payout:'CPA', netRev:38, tac:189, pl:-151, pacing:null, rag:'Red', blocker:'TAC 5x Revenue' },
+      { name:'Successful Media', target:200, payout:'CPC/CPA', netRev:0, tac:0, pl:0, pacing:0, rag:'Amber', blocker:'Launched 8th April' },
+      { name:'Buyerlink', target:0, payout:'CPA', netRev:0, tac:0, pl:0, pacing:0, rag:'Amber', blocker:'Campaigns paused - adv landing page not working' },
+    ],
+  },
+  ytd: {
+    label: 'Jan 1 - Apr 13, 2026 Year-to-Date (Looker Studio, refreshed 4/13)',
+    period: 'YTD',
+    overview: {
+      netRev: 2973387, tac: 2504914, pl: 550620, pacing: null, target: null, variance: null,
+      supplyRev: 2973387, demandRev: 895007, supplyPL: 468472, demandPL: 82147
+    },
+    verticals: [
+      { book:'Supply', name:'Edu: LeadGen', tag:'vt-edu', netRev:644885, tac:561671, pl:83214, pacing:null, target:null, variance:'12.3% margin', focus:'Healthy', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: Clicks', tag:'vt-autos', netRev:617214, tac:504982, pl:112232, pacing:null, target:null, variance:'18.2% margin', focus:'Healthy', focusCls:'focus-low' },
+      { book:'Supply', name:'PTP', tag:'vt-ptp', netRev:429819, tac:283063, pl:146756, pacing:null, target:null, variance:'34.1% margin', focus:'Star', focusCls:'focus-low' },
+      { book:'Supply', name:'Edu: Clicks', tag:'vt-edu', netRev:152759, tac:135816, pl:16943, pacing:null, target:null, variance:'11.1% margin', focus:'Healthy', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: LeadGen', tag:'vt-autos', netRev:73091, tac:81660, pl:-8569, pacing:null, target:null, variance:'-11.1% margin', focus:'Loss-Making', focusCls:'focus-high' },
+      { book:'Demand', name:'Demand Book', tag:'vt-demand', netRev:895007, tac:816082, pl:82147, pacing:null, target:null, variance:'9.2% margin', focus:'Healthy', focusCls:'focus-low' },
+    ]
+  },
+  daily: {
+    label: 'Cumulative Change (Apr 8 → Apr 13)',
+    period: 'Daily',
+    overview: {
+      netRev: 94106, tac: 84323, pl: 9782,
+      supplyRev: -1064, demandRev: 95170, supplyPL: -1065, demandPL: 10846,
+      pacing: null, target: null, variance: null
+    },
+    verticals: [
+      { book:'Demand', name:'Ad.Tech', tag:'vt-demand', netRev:95170, tac:84323, pl:10846, pacing:null, target:null, variance:'LTV growth +$95K', focus:'Key Driver', focusCls:'focus-low' },
+      { book:'Supply', name:'Edu: LeadGen', tag:'vt-edu', netRev:-1064, tac:0, pl:-1064, pacing:null, target:null, variance:'Data adj.', focus:'Adj.', focusCls:'focus-medium' },
+      { book:'Supply', name:'Edu: Clicks', tag:'vt-edu', netRev:0, tac:0, pl:0, pacing:null, target:null, variance:'Flat', focus:'Flat', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: Clicks', tag:'vt-autos', netRev:0, tac:0, pl:0, pacing:null, target:null, variance:'Flat', focus:'Flat', focusCls:'focus-low' },
+      { book:'Supply', name:'Autos: LeadGen', tag:'vt-autos', netRev:0, tac:0, pl:0, pacing:null, target:null, variance:'Flat', focus:'Flat', focusCls:'focus-low' },
+      { book:'Supply', name:'PTP', tag:'vt-ptp', netRev:0, tac:0, pl:0, pacing:null, target:null, variance:'Flat', focus:'Flat', focusCls:'focus-low' },
+      { book:'Supply', name:'Others', tag:'vt-other', netRev:0, tac:0, pl:0, pacing:null, target:null, variance:'Flat', focus:'Flat', focusCls:'focus-low' },
+    ],
+    _note: 'Cumulative delta = Apr 13 live data vs Apr 8 snapshot. Demand LTV drove +$95.2K rev (+$10.8K P&L); Edu LeadGen data adj -$1.1K. Supply book data pending refresh.'
+  }
+};
+
+// ==================== FORMATTING ====================
+const $ = v => v == null ? 'N/A' : (v < 0 ? '-$' + Math.abs(v).toLocaleString() : '$' + v.toLocaleString());
+const $k = v => v == null ? 'N/A' : (Math.abs(v) >= 1000000 ? (v < 0 ? '-' : '') + '$' + (Math.abs(v)/1000000).toFixed(2) + 'M' : (Math.abs(v) >= 1000 ? (v < 0 ? '-' : '') + '$' + (Math.abs(v)/1000).toFixed(1) + 'K' : $(v)));
+const plColor = v => v == null ? '' : v >= 0 ? 'color:var(--green)' : 'color:var(--red)';
+const ragClass = r => r === 'Red' ? 'status-critical' : r === 'Amber' ? 'status-warning' : r === 'Green' ? 'status-good' : '';
+
+// ==================== RENDER: EXECUTIVE OVERVIEW ====================
+let currentPeriod = 'mtd';
+let currentChart1 = null, currentChart2 = null;
+
+function setPeriod(period, btn) {
+  currentPeriod = period;
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('periodLabel').textContent = DATA[period].label;
+  renderOverview(period);
+}
+
+function renderOverview(period) {
+  const d = DATA[period];
+  const kpiEl = document.getElementById('overviewKpis');
+  const tableEl = document.getElementById('overviewTable');
+
+  if (period === 'daily' && !d.overview) {
+    kpiEl.innerHTML = '<div class="kpi blue" style="grid-column:1/-1;text-align:center;padding:40px"><div class="kpi-label">DAILY DATA</div><div class="daily-na">Awaiting first scheduled run at 6pm IST to capture today\'s snapshot.<br>Daily deltas will appear after two consecutive snapshots are recorded.</div></div>';
+    tableEl.innerHTML = '';
+    document.getElementById('chartTitle1').textContent = 'Daily P&L Change';
+    document.getElementById('chartTitle2').textContent = 'Daily Revenue Change';
+    if (currentChart1) { currentChart1.destroy(); currentChart1 = null; }
+    if (currentChart2) { currentChart2.destroy(); currentChart2 = null; }
+    return;
+  }
+
+  const o = d.overview;
+  const margin = o.netRev > 0 ? ((o.pl / o.netRev) * 100).toFixed(1) : '0';
+
+  let kpiHtml = `
+    <div class="kpi blue"><div class="kpi-label">Net Revenue (${d.period})</div><div class="kpi-value">${$k(o.netRev)}</div>
+      <div class="kpi-sub neutral">Supply ${$k(o.supplyRev)} + Demand ${$k(o.demandRev)}</div>
+      ${period === 'mtd' ? `<div class="kpi-context"><span>YTD: ${$k(DATA.ytd.overview.netRev)}</span></div>` : period === 'ytd' ? `<div class="kpi-context"><span>MTD: ${$k(DATA.mtd.overview.netRev)}</span></div>` : ''}
+    </div>
+    <div class="kpi teal"><div class="kpi-label">TAC (${d.period})</div><div class="kpi-value">${$k(o.tac)}</div>
+      <div class="kpi-sub down">${(o.tac/o.netRev*100).toFixed(1)}% of Net Revenue</div>
+      ${period === 'mtd' ? `<div class="kpi-context"><span>YTD: ${$k(DATA.ytd.overview.tac)}</span></div>` : period === 'ytd' ? `<div class="kpi-context"><span>MTD: ${$k(DATA.mtd.overview.tac)}</span></div>` : ''}
+    </div>
+    <div class="kpi green"><div class="kpi-label">P&L (${d.period})</div><div class="kpi-value">${$k(o.pl)}</div>
+      <div class="kpi-sub up">${margin}% margin</div>
+      ${period === 'mtd' ? `<div class="kpi-context"><span>YTD: ${$k(DATA.ytd.overview.pl)}</span></div>` : period === 'ytd' ? `<div class="kpi-context"><span>MTD: ${$k(DATA.mtd.overview.pl)}</span></div>` : ''}
+    </div>`;
+  if (o.pacing != null) {
+    kpiHtml += `<div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(o.pacing)}</div><div class="kpi-sub neutral">vs ${$k(o.target)} target</div></div>`;
+    kpiHtml += `<div class="kpi ${o.variance >= 0 ? 'green' : 'red'}"><div class="kpi-label">Variance</div><div class="kpi-value">${o.variance}%</div><div class="kpi-sub ${o.variance >= 0 ? 'up' : 'down'}">${$k(Math.abs(o.target - o.pacing))} ${o.variance >= 0 ? 'ahead' : 'gap to close'}</div></div>`;
+  } else {
+    kpiHtml += `<div class="kpi amber"><div class="kpi-label">Supply P&L</div><div class="kpi-value">${$k(o.supplyPL)}</div><div class="kpi-sub up">${(o.supplyPL/o.supplyRev*100).toFixed(1)}% margin</div></div>`;
+    kpiHtml += `<div class="kpi teal"><div class="kpi-label">Demand P&L</div><div class="kpi-value">${$k(o.demandPL)}</div><div class="kpi-sub up">${(o.demandPL/o.demandRev*100).toFixed(1)}% margin</div></div>`;
+  }
+  kpiEl.innerHTML = kpiHtml;
+
+  const verts = d.verticals;
+  const hasPacing = verts[0].pacing != null;
+  let thtml = `<table><thead><tr><th>Book</th><th>Vertical</th><th>Net Rev</th><th>TAC</th><th>P&L</th>${hasPacing ? '<th>EOM Pacing</th><th>Target</th><th>Variance</th>' : '<th>Margin</th>'}<th>Focus</th></tr></thead><tbody>`;
+  let totalRev = 0, totalTac = 0, totalPL = 0;
+  verts.forEach(v => {
+    totalRev += v.netRev; totalTac += v.tac; totalPL += v.pl;
+    thtml += `<tr><td><strong>${v.book}</strong></td><td><span class="vertical-tag ${v.tag}">${v.name}</span></td><td>${$(v.netRev)}</td><td>${$(v.tac)}</td><td style="${plColor(v.pl)}">${$(v.pl)}</td>`;
+    if (hasPacing) thtml += `<td>${$(v.pacing)}</td><td>${$(v.target)}</td><td>${v.variance}</td>`;
+    else thtml += `<td>${v.variance}</td>`;
+    thtml += `<td><span class="${v.focusCls}">${v.focus}</span></td></tr>`;
+  });
+  thtml += `<tr style="font-weight:700;background:rgba(99,102,241,0.08)"><td></td><td>Grand Total</td><td>${$(totalRev)}</td><td>${$(totalTac)}</td><td>${$(totalPL)}</td>`;
+  if (hasPacing) { const tp = DATA.mtd.overview.pacing, tt = DATA.mtd.overview.target; thtml += `<td>${$(tp)}</td><td>${$(tt)}</td><td>${DATA.mtd.overview.variance}%</td>`; }
+  else thtml += `<td>${(totalPL/totalRev*100).toFixed(1)}%</td>`;
+  thtml += `<td></td></tr></tbody></table>`;
+  tableEl.innerHTML = thtml;
+  document.getElementById('tableTitle').textContent = `${d.period} — P&L by Vertical`;
+  document.getElementById('chartTitle1').textContent = `P&L by Vertical (${d.period})`;
+  document.getElementById('chartTitle2').textContent = `Net Revenue vs TAC (${d.period})`;
+  renderOverviewCharts(verts, d.period);
+}
+
+function renderOverviewCharts(verts, label) {
+  if (currentChart1) currentChart1.destroy();
+  if (currentChart2) currentChart2.destroy();
+  const ctx1 = document.getElementById('plByVerticalChart');
+  currentChart1 = new Chart(ctx1, { type:'bar', data:{ labels:verts.map(v=>v.name), datasets:[{label:'P&L',data:verts.map(v=>v.pl),backgroundColor:ctx=>ctx.raw>=0?'#22c55e':'#ef4444',borderRadius:6,barPercentage:0.6}] }, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>$k(v)}}}} });
+  const ctx2 = document.getElementById('revenueCompChart');
+  currentChart2 = new Chart(ctx2, { type:'bar', data:{ labels:verts.map(v=>v.name), datasets:[{label:'Net Rev',data:verts.map(v=>v.netRev),backgroundColor:'#6366f1',borderRadius:4,barPercentage:0.4},{label:'TAC',data:verts.map(v=>v.tac),backgroundColor:'rgba(239,68,68,0.6)',borderRadius:4,barPercentage:0.4}] }, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},scales:{y:{ticks:{callback:v=>$k(v)}}}} });
+}
+
+// ==================== UNIFIED SUB-TAB PERIOD SWITCHING ====================
+function setSubPeriod(tab, period, btn) {
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tab + 'PeriodLabel').textContent = DATA[period].label;
+  const renderers = { edu: renderEdu, autos: renderAutos, ptp: renderPTP, demand: renderDemand, others: renderOthers };
+  renderers[tab](period);
+}
+
+// ==================== RENDER: EDUCATION ====================
+function renderEdu(period) {
+  const kpiEl = document.getElementById('eduKpis');
+  const secEl = document.getElementById('eduTableSection');
+  if (period === 'daily' && !DATA.daily.overview) { kpiEl.innerHTML = dailyNA(); secEl.innerHTML = ''; return; }
+  if (period === 'ytd') {
+    const ev = DATA.ytd.verticals.filter(v => v.name.startsWith('Edu'));
+    const totalRev = ev.reduce((s,v)=>s+v.netRev,0), totalTac = ev.reduce((s,v)=>s+v.tac,0), totalPL = ev.reduce((s,v)=>s+v.pl,0);
+    kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Edu Net Revenue (YTD)</div><div class="kpi-value">${$k(totalRev)}</div><div class="kpi-sub neutral">LeadGen + Clicks combined</div></div>
+      <div class="kpi teal"><div class="kpi-label">Edu TAC (YTD)</div><div class="kpi-value">${$k(totalTac)}</div></div>
+      <div class="kpi green"><div class="kpi-label">Edu P&L (YTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub up">${(totalPL/totalRev*100).toFixed(1)}% margin</div></div>`;
+    let t = '<div class="section-header"><div class="section-title">Education YTD by Sub-Vertical</div></div><div class="table-wrap"><table><thead><tr><th>Vertical</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>Margin</th><th>Focus</th></tr></thead><tbody>';
+    ev.forEach(v => { t += `<tr><td><span class="vertical-tag vt-edu">${v.name}</span></td><td>${$(v.netRev)}</td><td>${$(v.tac)}</td><td style="${plColor(v.pl)}">${$(v.pl)}</td><td>${v.variance}</td><td><span class="${v.focusCls}">${v.focus}</span></td></tr>`; });
+    t += '</tbody></table></div>';
+    secEl.innerHTML = t; return;
+  }
+  const advs = DATA.mtd.eduAdvertisers;
+  const totalRev = advs.reduce((s,a)=>s+a.netRev,0), totalTac = advs.reduce((s,a)=>s+a.tac,0), totalPL = advs.reduce((s,a)=>s+a.pl,0);
+  const reds = advs.filter(a=>a.rag==='Red').length;
+  kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Edu Net Revenue (MTD)</div><div class="kpi-value">${$k(totalRev)}</div><div class="kpi-sub neutral">LeadGen + Clicks</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.filter(v=>v.name.startsWith('Edu')).reduce((s,v)=>s+v.netRev,0))}</span></div></div>
+    <div class="kpi green"><div class="kpi-label">Edu P&L (MTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub up">${(totalPL/totalRev*100).toFixed(1)}% margin</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.filter(v=>v.name.startsWith('Edu')).reduce((s,v)=>s+v.pl,0))}</span></div></div>
+    <div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(advs.reduce((s,a)=>s+a.pacing,0))}</div></div>
+    <div class="kpi red"><div class="kpi-label">Red Advertisers</div><div class="kpi-value">${reds}</div><div class="kpi-sub down">Need intervention</div></div>`;
+  let t = '<div class="section-header"><div class="section-title">Education MTD by Advertiser</div></div><div class="table-wrap"><table><thead><tr><th>Sub</th><th>Advertiser</th><th>Target</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>Pacing</th><th>RAG</th><th>Blocker</th><th>Action</th></tr></thead><tbody>';
+  advs.forEach(a => { t += `<tr><td><span class="vertical-tag vt-edu">${a.sub}</span></td><td><strong>${a.name}</strong></td><td>${$(a.target)}</td><td>${$(a.netRev)}</td><td>${$(a.tac)}</td><td style="${plColor(a.pl)}">${$(a.pl)}</td><td>${$(a.pacing)}</td><td><span class="${ragClass(a.rag)}">${a.rag}</span></td><td style="white-space:normal;max-width:200px">${a.blocker}</td><td style="white-space:normal;max-width:200px">${a.action||''}</td></tr>`; });
+  t += '</tbody></table></div>';
+  secEl.innerHTML = t;
+}
+
+// ==================== RENDER: AUTOS ====================
+function renderAutos(period) {
+  const kpiEl = document.getElementById('autosKpis');
+  const secEl = document.getElementById('autosTableSection');
+  if (period === 'daily' && !DATA.daily.overview) { kpiEl.innerHTML = dailyNA(); secEl.innerHTML = ''; return; }
+  if (period === 'ytd') {
+    const av = DATA.ytd.verticals.filter(v => v.name.startsWith('Autos'));
+    const totalRev = av.reduce((s,v)=>s+v.netRev,0), totalTac = av.reduce((s,v)=>s+v.tac,0), totalPL = av.reduce((s,v)=>s+v.pl,0);
+    kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Autos Net Revenue (YTD)</div><div class="kpi-value">${$k(totalRev)}</div></div>
+      <div class="kpi teal"><div class="kpi-label">Autos TAC (YTD)</div><div class="kpi-value">${$k(totalTac)}</div></div>
+      <div class="kpi ${totalPL>=0?'green':'red'}"><div class="kpi-label">Autos P&L (YTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub ${totalPL>=0?'up':'down'}">${(totalPL/totalRev*100).toFixed(1)}% margin</div></div>`;
+    let t = '<div class="section-header"><div class="section-title">Autos YTD by Sub-Vertical</div></div><div class="table-wrap"><table><thead><tr><th>Vertical</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>Margin</th><th>Focus</th></tr></thead><tbody>';
+    av.forEach(v => { t += `<tr><td><span class="vertical-tag vt-autos">${v.name}</span></td><td>${$(v.netRev)}</td><td>${$(v.tac)}</td><td style="${plColor(v.pl)}">${$(v.pl)}</td><td>${v.variance}</td><td><span class="${v.focusCls}">${v.focus}</span></td></tr>`; });
+    t += '</tbody></table></div>';
+    secEl.innerHTML = t; return;
+  }
+  const advs = DATA.mtd.autosAdvertisers;
+  const totalRev = advs.reduce((s,a)=>s+a.netRev,0), totalTac = advs.reduce((s,a)=>s+a.tac,0), totalPL = advs.reduce((s,a)=>s+a.pl,0);
+  kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Autos Net Revenue (MTD)</div><div class="kpi-value">${$k(totalRev)}</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.filter(v=>v.name.startsWith('Autos')).reduce((s,v)=>s+v.netRev,0))}</span></div></div>
+    <div class="kpi green"><div class="kpi-label">Autos P&L (MTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub up">${(totalPL/totalRev*100).toFixed(1)}% margin</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.filter(v=>v.name.startsWith('Autos')).reduce((s,v)=>s+v.pl,0))}</span></div></div>
+    <div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(advs.reduce((s,a)=>s+a.pacing,0))}</div></div>
+    <div class="kpi red"><div class="kpi-label">Lotlinx Status</div><div class="kpi-value">Red</div><div class="kpi-sub down">Pacing ${$k(advs[0].pacing)}</div></div>`;
+  let t = '<div class="section-header"><div class="section-title">Autos MTD by Advertiser</div></div><div class="table-wrap"><table><thead><tr><th>Sub</th><th>Advertiser</th><th>Target</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>Pacing</th><th>RAG</th><th>Blocker</th></tr></thead><tbody>';
+  advs.forEach(a => { t += `<tr><td><span class="vertical-tag vt-autos">${a.sub}</span></td><td><strong>${a.name}</strong></td><td>${$(a.target)}</td><td>${$(a.netRev)}</td><td>${$(a.tac)}</td><td style="${plColor(a.pl)}">${$(a.pl)}</td><td>${$(a.pacing)}</td><td><span class="${ragClass(a.rag)}">${a.rag}</span></td><td>${a.blocker}</td></tr>`; });
+  t += '</tbody></table></div>';
+  secEl.innerHTML = t;
+}
+
+// ==================== RENDER: PTP ====================
+function renderPTP(period) {
+  const kpiEl = document.getElementById('ptpKpis');
+  const secEl = document.getElementById('ptpTableSection');
+  if (period === 'daily' && !DATA.daily.overview) { kpiEl.innerHTML = dailyNA(); secEl.innerHTML = ''; return; }
+  if (period === 'ytd') {
+    const pv = DATA.ytd.verticals.find(v => v.name === 'PTP');
+    kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">PTP Net Revenue (YTD)</div><div class="kpi-value">${$k(pv.netRev)}</div></div>
+      <div class="kpi teal"><div class="kpi-label">PTP TAC (YTD)</div><div class="kpi-value">${$k(pv.tac)}</div></div>
+      <div class="kpi green"><div class="kpi-label">PTP P&L (YTD)</div><div class="kpi-value">${$k(pv.pl)}</div><div class="kpi-sub up">${pv.variance}</div></div>`;
+    secEl.innerHTML = '<div class="section-header"><div class="section-title">PTP YTD Summary</div></div><p style="color:var(--text-muted);font-size:13px;">Publisher-level YTD breakdown available from Looker Studio. MTD tab shows full publisher detail from the P&L Book.</p>';
+    return;
+  }
+  const pubs = DATA.mtd.ptpPublishers;
+  const totalRev = pubs.reduce((s,p)=>s+p.netRev,0), totalTac = pubs.reduce((s,p)=>s+p.tac,0), totalPL = pubs.reduce((s,p)=>s+p.pl,0);
+  const totalPacing = pubs.reduce((s,p)=>s+p.pacing,0), totalTarget = pubs.reduce((s,p)=>s+p.target,0);
+  kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">PTP Net Revenue (MTD)</div><div class="kpi-value">${$k(totalRev)}</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.find(v=>v.name==='PTP').netRev)}</span></div></div>
+    <div class="kpi green"><div class="kpi-label">PTP P&L (MTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub up">${(totalPL/totalRev*100).toFixed(1)}% margin</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.find(v=>v.name==='PTP').pl)}</span></div></div>
+    <div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(totalPacing)}</div><div class="kpi-sub up">vs ${$k(totalTarget)} target</div></div>
+    <div class="kpi teal"><div class="kpi-label">All Publishers</div><div class="kpi-value">${pubs.length}</div><div class="kpi-sub up">${pubs.filter(p=>p.pl>0).length} profitable</div></div>`;
+  let t = '<div class="section-header"><div class="section-title">PTP MTD by Publisher</div></div><div class="table-wrap"><table><thead><tr><th>Publisher</th><th>Target</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>Margin</th><th>EOM Pacing</th><th>RAG</th><th>Blocker</th></tr></thead><tbody>';
+  pubs.forEach(p => {
+    const m = p.netRev > 0 ? ((p.pl/p.netRev)*100).toFixed(1)+'%' : 'N/A';
+    t += `<tr><td><strong>${p.name}</strong></td><td>${$(p.target)}</td><td>${$(p.netRev)}</td><td>${$(p.tac)}</td><td style="${plColor(p.pl)}">${$(p.pl)}</td><td>${m}</td><td>${$(p.pacing)}</td><td><span class="${ragClass(p.rag)}">${p.rag}</span></td><td>${p.blocker}</td></tr>`;
+  });
+  t += `<tr style="font-weight:700;background:rgba(99,102,241,0.08)"><td>Total</td><td>${$(totalTarget)}</td><td>${$(totalRev)}</td><td>${$(totalTac)}</td><td style="${plColor(totalPL)}">${$(totalPL)}</td><td>${(totalPL/totalRev*100).toFixed(1)}%</td><td>${$(totalPacing)}</td><td></td><td></td></tr>`;
+  t += '</tbody></table></div>';
+  secEl.innerHTML = t;
+}
+
+// ==================== RENDER: DEMAND BOOK ====================
+function renderDemand(period) {
+  const kpiEl = document.getElementById('demandKpis');
+  const secEl = document.getElementById('demandTableSection');
+  if (period === 'daily' && !DATA.daily.overview) { kpiEl.innerHTML = dailyNA(); secEl.innerHTML = ''; return; }
+  if (period === 'ytd') {
+    const dv = DATA.ytd.verticals.find(v => v.name === 'Demand Book');
+    kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Demand Net Revenue (YTD)</div><div class="kpi-value">${$k(dv.netRev)}</div></div>
+      <div class="kpi teal"><div class="kpi-label">Demand TAC (YTD)</div><div class="kpi-value">${$k(dv.tac)}</div></div>
+      <div class="kpi green"><div class="kpi-label">Demand P&L (YTD)</div><div class="kpi-value">${$k(dv.pl)}</div><div class="kpi-sub up">${dv.variance}</div></div>`;
+    secEl.innerHTML = '<div class="section-header"><div class="section-title">Demand Book YTD Summary</div></div><p style="color:var(--text-muted);font-size:13px;">Advertiser-level YTD breakdown available from Looker Studio. MTD tab shows full advertiser detail from the P&L Book.</p>';
+    return;
+  }
+  const advs = DATA.mtd.demandAdvertisers;
+  const totalRev = advs.reduce((s,a)=>s+a.netRev,0), totalTac = advs.reduce((s,a)=>s+a.tac,0), totalPL = advs.reduce((s,a)=>s+a.pl,0);
+  const totalPacing = advs.reduce((s,a)=>s+(a.pacing||0),0), totalTarget = advs.reduce((s,a)=>s+a.target,0);
+  const reds = advs.filter(a=>a.rag==='Red').length;
+  const zeroRev = advs.filter(a=>a.netRev===0).length;
+  kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Demand Net Revenue (MTD)</div><div class="kpi-value">${$k(totalRev)}</div><div class="kpi-sub neutral">LTV is ${(advs[0].netRev/totalRev*100).toFixed(0)}% of total</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.find(v=>v.name==='Demand Book').netRev)}</span></div></div>
+    <div class="kpi ${totalPL>=0?'green':'red'}"><div class="kpi-label">Demand P&L (MTD)</div><div class="kpi-value">${$k(totalPL)}</div><div class="kpi-sub ${totalPL>=0?'up':'down'}">${(totalPL/totalRev*100).toFixed(1)}% margin</div><div class="kpi-context"><span>YTD: ${$k(DATA.ytd.verticals.find(v=>v.name==='Demand Book').pl)}</span></div></div>
+    <div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(totalPacing)}</div><div class="kpi-sub down">vs ${$k(totalTarget)} target (-14.4%)</div></div>
+    <div class="kpi red"><div class="kpi-label">Zero Revenue</div><div class="kpi-value">${zeroRev} of ${advs.length}</div><div class="kpi-sub down">${reds} Red status</div></div>`;
+  let t = '<div class="section-header"><div class="section-title">Demand Book MTD by Advertiser</div></div><div class="table-wrap"><table><thead><tr><th>Advertiser</th><th>Payout</th><th>Target</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>EOM Pacing</th><th>RAG</th><th>Blocker</th></tr></thead><tbody>';
+  advs.forEach(a => {
+    t += `<tr><td><strong>${a.name}</strong></td><td>${a.payout}</td><td>${$(a.target)}</td><td>${$(a.netRev)}</td><td>${$(a.tac)}</td><td style="${plColor(a.pl)}">${$(a.pl)}</td><td>${$(a.pacing)}</td><td><span class="${ragClass(a.rag)}">${a.rag}</span></td><td style="white-space:normal;max-width:200px">${a.blocker}</td></tr>`;
+  });
+  t += `<tr style="font-weight:700;background:rgba(99,102,241,0.08)"><td>Total</td><td></td><td>${$(totalTarget)}</td><td>${$(totalRev)}</td><td>${$(totalTac)}</td><td style="${plColor(totalPL)}">${$(totalPL)}</td><td>${$(totalPacing)}</td><td></td><td></td></tr>`;
+  t += '</tbody></table></div>';
+  secEl.innerHTML = t;
+}
+
+// ==================== RENDER: OTHERS ====================
+function renderOthers(period) {
+  const kpiEl = document.getElementById('othersKpis');
+  const secEl = document.getElementById('othersTableSection');
+  if (period === 'daily' && !DATA.daily.overview) { kpiEl.innerHTML = dailyNA(); secEl.innerHTML = ''; return; }
+  if (period === 'ytd') {
+    kpiEl.innerHTML = `<div class="kpi red"><div class="kpi-label">Others P&L (YTD)</div><div class="kpi-value">N/A</div><div class="kpi-sub down">YTD data not tracked separately for Others in Looker Studio</div></div>`;
+    secEl.innerHTML = '<div class="section-header"><div class="section-title">Others YTD</div></div><p style="color:var(--text-muted);font-size:13px;">Others/Performance Offers vertical is not broken out in Looker Studio YTD data. See MTD tab for current month detail.</p>';
+    return;
+  }
+  const advs = DATA.mtd.othersAdvertisers;
+  const totalRev = advs.reduce((s,a)=>s+a.netRev,0), totalTac = advs.reduce((s,a)=>s+a.tac,0), totalPL = advs.reduce((s,a)=>s+a.pl,0);
+  const totalTarget = advs.reduce((s,a)=>s+a.target,0);
+  kpiEl.innerHTML = `<div class="kpi blue"><div class="kpi-label">Others Net Revenue (MTD)</div><div class="kpi-value">${$(totalRev)}</div><div class="kpi-sub down">TAC: ${$(totalTac)} (${(totalTac/Math.max(totalRev,1)*100).toFixed(0)}% of revenue)</div></div>
+    <div class="kpi red"><div class="kpi-label">Others P&L (MTD)</div><div class="kpi-value">${$(totalPL)}</div><div class="kpi-sub down">All active advertisers loss-making</div></div>
+    <div class="kpi amber"><div class="kpi-label">EOM Pacing</div><div class="kpi-value">${$k(DATA.mtd.verticals.find(v=>v.name==='Others').pacing)}</div><div class="kpi-sub down">vs ${$k(DATA.mtd.verticals.find(v=>v.name==='Others').target)} target</div></div>
+    <div class="kpi red"><div class="kpi-label">Status</div><div class="kpi-value">Critical</div><div class="kpi-sub down">Variance: ${DATA.mtd.verticals.find(v=>v.name==='Others').variance}</div></div>`;
+  let t = '<div class="section-header"><div class="section-title">Others/Performance Offers MTD by Advertiser</div></div><div class="table-wrap"><table><thead><tr><th>Advertiser</th><th>Payout</th><th>Target</th><th>Net Rev</th><th>TAC</th><th>P&L</th><th>EOM Pacing</th><th>RAG</th><th>Blocker</th></tr></thead><tbody>';
+  advs.forEach(a => {
+    t += `<tr><td><strong>${a.name}</strong></td><td>${a.payout}</td><td>${$(a.target)}</td><td>${$(a.netRev)}</td><td>${$(a.tac)}</td><td style="${plColor(a.pl)}">${$(a.pl)}</td><td>${$(a.pacing)}</td><td><span class="${ragClass(a.rag)}">${a.rag}</span></td><td style="white-space:normal;max-width:200px">${a.blocker}</td></tr>`;
+  });
+  t += `<tr style="font-weight:700;background:rgba(99,102,241,0.08)"><td>Total</td><td></td><td>${$(totalTarget)}</td><td>${$(totalRev)}</td><td>${$(totalTac)}</td><td style="${plColor(totalPL)}">${$(totalPL)}</td><td>${$(DATA.mtd.verticals.find(v=>v.name==='Others').pacing)}</td><td></td><td></td></tr>`;
+  t += '</tbody></table></div>';
+  secEl.innerHTML = t;
+}
+
+// ==================== HELPERS ====================
+function dailyNA() {
+  return '<div class="kpi blue" style="grid-column:1/-1;text-align:center;padding:40px"><div class="kpi-label">DAILY DATA</div><div class="daily-na">Awaiting first scheduled run. Daily deltas will appear after two consecutive snapshots.</div></div>';
+}
+
+// ==================== TAB SWITCHING ====================
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'overview') renderOverview(currentPeriod);
+  if (tab === 'education') renderEdu('mtd');
+  if (tab === 'autos') renderAutos('mtd');
+  if (tab === 'ptp') renderPTP('mtd');
+  if (tab === 'demand') renderDemand('mtd');
+  if (tab === 'others') renderOthers('mtd');
+}
+
+// ==================== INIT ====================
+document.getElementById('lastUpdated').textContent = new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+Chart.defaults.color = '#9ca3af';
+Chart.defaults.borderColor = 'rgba(42,45,58,0.5)';
+Chart.defaults.font.family = "'Inter',-apple-system,sans-serif";
+renderOverview('mtd');
+</script>
+</body>
+</html>

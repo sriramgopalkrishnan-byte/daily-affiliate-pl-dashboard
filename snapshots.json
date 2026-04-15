@@ -1,0 +1,51 @@
+{
+  "description": "Daily MTD snapshots for P&L delta calculation. Each entry = MTD cumulative at time of capture.",
+  "snapshots": [
+    {
+      "date": "2026-04-09",
+      "capturedAt": "2026-04-09T18:00:00+05:30",
+      "dataSource": "dashboard_html_baseline",
+      "note": "First snapshot. Chrome extension unavailable this run — data sourced from existing dashboard (reflects Apr 8 actuals). No delta available yet.",
+      "overview": {
+        "netRev": 120634,
+        "tac": 102530,
+        "pl": 18105,
+        "pacing": 109165,
+        "target": 112113,
+        "variancePct": -2.6
+      },
+      "verticals": [
+        { "book": "Supply", "name": "Edu: LeadGen",    "netRev": 30492, "tac": 26123, "pl": 4369  },
+        { "book": "Supply", "name": "Edu: Clicks",     "netRev": 7168,  "tac": 6484,  "pl": 683   },
+        { "book": "Supply", "name": "Autos: Clicks",   "netRev": 5502,  "tac": 4138,  "pl": 1365  },
+        { "book": "Supply", "name": "Autos: LeadGen",  "netRev": 1496,  "tac": 1278,  "pl": 218   },
+        { "book": "Supply", "name": "PTP",             "netRev": 14012, "tac": 8560,  "pl": 5452  },
+        { "book": "Supply", "name": "Others",          "netRev": 481,   "tac": 1368,  "pl": -886  },
+        { "book": "Demand", "name": "Ad.Tech",         "netRev": 61482, "tac": 54578, "pl": 6904  }
+      ]
+    },
+    {
+      "date": "2026-04-10",
+      "capturedAt": "2026-04-10T18:00:00+05:30",
+      "dataSource": "google_sheets_live",
+      "note": "Live data from Google Sheets (Chrome extension available). Reflects Apr 10 actuals. Delta vs Apr 9 carry-forward: P&L +$5,136, driven by LTV Demand +$6,201 offset by Edu LeadGen data adjustment -$1,064.",
+      "overview": {
+        "netRev": 175193,
+        "tac": 151952,
+        "pl": 23241,
+        "pacing": 107225,
+        "target": 107363,
+        "variancePct": -0.1
+      },
+      "verticals": [
+        { "book": "Supply", "name": "Edu: LeadGen",    "netRev": 29428, "tac": 26123, "pl": 3305  },
+        { "book": "Supply", "name": "Edu: Clicks",     "netRev": 7168,  "tac": 6484,  "pl": 683   },
+        { "book": "Supply", "name": "Autos: Clicks",   "netRev": 5502,  "tac": 4138,  "pl": 1365  },
+        { "book": "Supply", "name": "Autos: LeadGen",  "netRev": 1496,  "tac": 1278,  "pl": 218   },
+        { "book": "Supply", "name": "PTP",             "netRev": 14012, "tac": 8560,  "pl": 5452  },
+        { "book": "Supply", "name": "Others",          "netRev": 481,   "tac": 1368,  "pl": -886  },
+        { "book": "Demand", "name": "Ad.Tech",         "netRev": 117105,"tac": 104000,"pl": 13105 }
+      ]
+    }
+  ]
+}
