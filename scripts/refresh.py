@@ -170,7 +170,7 @@ def parse_advertisers(headers, rows, sub_label=""):
             "vertical":   col(d, "Vertical", "vertical"),
             "payout":     col(d, "Payout Type", "payout"),
             "target":     to_num(col(d, "P&L Target", "pl target")),
-            "netRev":     to_num(col(d, "Net Revenue", "net revenue", "revenue")),
+            "netRev":     to_num(col(d, "Net Revenue", "Gross Revenue", "net revenue", "gross revenue")),
             "tac":        to_num(col(d, "TAC", "tac")),
             "plActual":   to_num(col(d, "P&L Actual", "pl actual")),
             "plPacing":   to_num(col(d, "P&L EOM Pacing", "eom pacing", "pacing")),
@@ -203,8 +203,14 @@ def agg(advs, *vertical_keywords):
     }
 
 
-# Combine all sources (summary sheet is the ground truth; detailed sheets add granularity)
-all_advs = summary_advs or (edu_advs + autos_advs)
+# Education & Autos: always use their dedicated tabs — these have Net Revenue (5% AAC-adjusted).
+# Sheet1 has Gross Revenue (pre-AAC) for those verticals, so we exclude them from summary_advs.
+# PTP, Others, Demand Book have no dedicated tabs — Sheet1 is correct for those.
+summary_other = [
+    a for a in summary_advs
+    if not any(kw in a["vertical"].lower() for kw in ("edu", "education", "autos"))
+]
+all_advs = edu_advs + autos_advs + summary_other
 
 today_verticals = {
     "edu_leadgen":   agg(all_advs, "Edu: LeadGen", "edu leadgen", "education leadgen"),
