@@ -12,7 +12,10 @@
       "demandPL": 0
     },
     "eduAdvertisers": [],
-    "autosAdvertisers": []
+    "autosAdvertisers": [],
+    "ptpPublishers": [],
+    "demandAdvertisers": [],
+    "othersAdvertisers": []
   },
   "daily": null
 }
