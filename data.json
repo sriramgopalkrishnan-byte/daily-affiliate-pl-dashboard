@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "Auto-refreshed 15 Apr 2026 1:00pm IST",
-  "refreshDate": "2026-04-15",
+  "lastUpdated": "Auto-refreshed 16 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-16",
   "mtd": {
     "overview": {
-      "netRev": 297533,
-      "tac": 253896,
-      "pl": 45336,
+      "netRev": 352134,
+      "tac": 302132,
+      "pl": 51701,
       "supplyRev": 141584,
-      "demandRev": 155949,
+      "demandRev": 210550,
       "supplyPL": 28076,
-      "demandPL": 17260
+      "demandPL": 23625
     },
     "eduAdvertisers": [
       {
@@ -382,10 +382,10 @@
         "sub": "Ad.Tech",
         "name": "LTV",
         "target": 40700,
-        "netRev": 154791,
-        "tac": 136836,
-        "pl": 17955,
-        "pacing": 44887,
+        "netRev": 209203,
+        "tac": 184428,
+        "pl": 24775,
+        "pacing": 49550,
         "rag": "Green",
         "blocker": "NA",
         "action": "NA"
@@ -394,10 +394,10 @@
         "sub": "Ad.Tech",
         "name": "Money Group",
         "target": 1500,
-        "netRev": 518,
-        "tac": 627,
-        "pl": -109,
-        "pacing": -272,
+        "netRev": 707,
+        "tac": 674,
+        "pl": 33,
+        "pacing": 66,
         "rag": "Red",
         "blocker": "Supply Distribution",
         "action": "Launching Newer Affiliates"
@@ -407,9 +407,9 @@
         "name": "Buyerlink",
         "target": 0,
         "netRev": 0,
-        "tac": 419,
-        "pl": -419,
-        "pacing": -1047,
+        "tac": 1009,
+        "pl": -1009,
+        "pacing": -1009,
         "rag": "Red",
         "blocker": "Conversion Tracking",
         "action": "Requested advertiser for conversion report."
@@ -419,9 +419,9 @@
         "name": "Successful Media",
         "target": 0,
         "netRev": 0,
-        "tac": 92,
-        "pl": -92,
-        "pacing": -230,
+        "tac": 99,
+        "pl": -99,
+        "pacing": -198,
         "rag": "Red",
         "blocker": "No conversion recorded",
         "action": "Test out new supply groups"
@@ -538,5 +538,114 @@
       }
     ]
   },
-  "daily": null
+  "daily": {
+    "label": "Daily Change vs 15 Apr 2026",
+    "period": "Daily",
+    "overview": {
+      "netRev": 54601,
+      "tac": 48236,
+      "pl": 6365,
+      "supplyRev": 0,
+      "demandRev": 54601,
+      "supplyPL": 0,
+      "demandPL": 6365,
+      "pacing": null,
+      "target": null,
+      "variance": null
+    },
+    "verticals": [
+      {
+        "book": "Supply",
+        "name": "Edu: LeadGen",
+        "tag": "vt-edu",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Supply",
+        "name": "Edu: Clicks",
+        "tag": "vt-edu",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Supply",
+        "name": "Autos: Clicks",
+        "tag": "vt-autos",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Supply",
+        "name": "Autos: LeadGen",
+        "tag": "vt-autos",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Supply",
+        "name": "PTP",
+        "tag": "vt-ptp",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Supply",
+        "name": "Others",
+        "tag": "vt-other",
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
+        "pacing": null,
+        "target": null,
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      },
+      {
+        "book": "Demand",
+        "name": "Ad.Tech",
+        "tag": "vt-demand",
+        "netRev": 54601,
+        "tac": 48236,
+        "pl": 6365,
+        "pacing": null,
+        "target": null,
+        "variance": "+$6,365",
+        "focus": "Up",
+        "focusCls": "focus-low"
+      }
+    ],
+    "_note": "Delta = 2026-04-16 MTD minus 2026-04-15 MTD. All figures 5% AAC-adjusted from dedicated tabs."
+  }
 }
