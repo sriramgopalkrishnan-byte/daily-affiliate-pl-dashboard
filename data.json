@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "Auto-refreshed 16 Apr 2026 1:00pm IST",
-  "refreshDate": "2026-04-16",
+  "lastUpdated": "Auto-refreshed 17 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-17",
   "mtd": {
     "overview": {
       "netRev": 352134,
@@ -539,16 +539,16 @@
     ]
   },
   "daily": {
-    "label": "Daily Change vs 15 Apr 2026",
+    "label": "Daily Change vs 16 Apr 2026",
     "period": "Daily",
     "overview": {
-      "netRev": 54601,
-      "tac": 48236,
-      "pl": 6365,
+      "netRev": 0,
+      "tac": 0,
+      "pl": 0,
       "supplyRev": 0,
-      "demandRev": 54601,
+      "demandRev": 0,
       "supplyPL": 0,
-      "demandPL": 6365,
+      "demandPL": 0,
       "pacing": null,
       "target": null,
       "variance": null
@@ -636,16 +636,16 @@
         "book": "Demand",
         "name": "Ad.Tech",
         "tag": "vt-demand",
-        "netRev": 54601,
-        "tac": 48236,
-        "pl": 6365,
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
         "pacing": null,
         "target": null,
-        "variance": "+$6,365",
+        "variance": "+$0",
         "focus": "Up",
         "focusCls": "focus-low"
       }
     ],
-    "_note": "Delta = 2026-04-16 MTD minus 2026-04-15 MTD. All figures 5% AAC-adjusted from dedicated tabs."
+    "_note": "Delta = 2026-04-17 MTD minus 2026-04-16 MTD. All figures 5% AAC-adjusted from dedicated tabs."
   }
 }
