@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "Auto-refreshed 18 Apr 2026 1:00pm IST",
-  "refreshDate": "2026-04-18",
+  "lastUpdated": "Auto-refreshed 19 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-19",
   "mtd": {
     "overview": {
       "netRev": 382419,
@@ -563,16 +563,16 @@
     ]
   },
   "daily": {
-    "label": "Daily Change vs 17 Apr 2026",
+    "label": "Daily Change vs 18 Apr 2026",
     "period": "Daily",
     "overview": {
-      "netRev": 30285,
-      "tac": 25381,
-      "pl": 4904,
-      "supplyRev": 6182,
-      "demandRev": 24103,
-      "supplyPL": 1338,
-      "demandPL": 3566,
+      "netRev": 0,
+      "tac": 0,
+      "pl": 0,
+      "supplyRev": 0,
+      "demandRev": 0,
+      "supplyPL": 0,
+      "demandPL": 0,
       "pacing": null,
       "target": null,
       "variance": null
@@ -595,12 +595,12 @@
         "book": "Supply",
         "name": "Edu: Clicks",
         "tag": "vt-edu",
-        "netRev": 6182,
-        "tac": 4844,
-        "pl": 1338,
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
         "pacing": null,
         "target": null,
-        "variance": "+$1,338",
+        "variance": "+$0",
         "focus": "Up",
         "focusCls": "focus-low"
       },
@@ -660,16 +660,16 @@
         "book": "Demand",
         "name": "Ad.Tech",
         "tag": "vt-demand",
-        "netRev": 24103,
-        "tac": 20537,
-        "pl": 3566,
+        "netRev": 0,
+        "tac": 0,
+        "pl": 0,
         "pacing": null,
         "target": null,
-        "variance": "+$3,566",
+        "variance": "+$0",
         "focus": "Up",
         "focusCls": "focus-low"
       }
     ],
-    "_note": "Delta = 2026-04-18 MTD minus 2026-04-17 MTD. All figures 5% AAC-adjusted from dedicated tabs."
+    "_note": "Delta = 2026-04-19 MTD minus 2026-04-18 MTD. All figures 5% AAC-adjusted from dedicated tabs."
   }
 }
