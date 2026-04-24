@@ -679,7 +679,68 @@
           "pl": 35669
         }
       ]
+    },
+    {
+      "date": "2026-04-24",
+      "capturedAt": "2026-04-24T13:00:00+05:30",
+      "dataSource": "github_actions_gviz_dedicated_tabs",
+      "overview": {
+        "netRev": 531870,
+        "tac": 446932,
+        "pl": 87497
+      },
+      "verticals": [
+        {
+          "book": "Supply",
+          "name": "Edu: LeadGen",
+          "netRev": 124179,
+          "tac": 104983,
+          "pl": 19196
+        },
+        {
+          "book": "Supply",
+          "name": "Edu: Clicks",
+          "netRev": 19040,
+          "tac": 17404,
+          "pl": 1636
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: Clicks",
+          "netRev": 23796,
+          "tac": 14956,
+          "pl": 8840
+        },
+        {
+          "book": "Supply",
+          "name": "Autos: LeadGen",
+          "netRev": 6134,
+          "tac": 5292,
+          "pl": 842
+        },
+        {
+          "book": "Supply",
+          "name": "PTP",
+          "netRev": 55645,
+          "tac": 34331,
+          "pl": 21314
+        },
+        {
+          "book": "Supply",
+          "name": "Others",
+          "netRev": 3503,
+          "tac": 6062,
+          "pl": 0
+        },
+        {
+          "book": "Demand",
+          "name": "Ad.Tech",
+          "netRev": 299573,
+          "tac": 263904,
+          "pl": 35669
+        }
+      ]
     }
   ],
-  "lastUpdated": "2026-04-23"
+  "lastUpdated": "2026-04-24"
 }

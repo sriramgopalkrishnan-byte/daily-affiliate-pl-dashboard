@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "Auto-refreshed 23 Apr 2026 1:00pm IST",
-  "refreshDate": "2026-04-23",
+  "lastUpdated": "Auto-refreshed 24 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-24",
   "mtd": {
     "overview": {
       "netRev": 531870,
@@ -501,7 +501,7 @@
     ],
     "othersAdvertisers": [
       {
-        "sub": "Others",
+        "sub": "Others - 1P",
         "name": "Homebuddy - Perform",
         "target": 425,
         "netRev": 280,
@@ -513,7 +513,7 @@
         "action": "Campaigns went live with new prelander"
       },
       {
-        "sub": "Others",
+        "sub": "Others - 1P",
         "name": "LTV",
         "target": 1260,
         "netRev": 3184,
@@ -525,7 +525,7 @@
         "action": "- Over the past 4 days (11-14 April), the LTV campaigns generated $678 in revenue from a $963 spend, resulting in 15 conversions at a CPA of $45.22, which is below the target CPA.\n- Activate FB for VIN, Phone Search, Unclaimed Money\n- Remove sites with low conv rate to improve efficiency ( increase revenue)"
       },
       {
-        "sub": "Others",
+        "sub": "Others - 1P",
         "name": "Buyerlink",
         "target": 0,
         "netRev": 0,
@@ -537,7 +537,7 @@
         "action": "- Resolve the redirection link"
       },
       {
-        "sub": "Others",
+        "sub": "Others - 1P",
         "name": "Successfull Media",
         "target": 200,
         "netRev": 0,
@@ -549,7 +549,7 @@
         "action": ""
       },
       {
-        "sub": "Others",
+        "sub": "Others - 1P",
         "name": "Money Group",
         "target": 190,
         "netRev": 38,
@@ -563,15 +563,15 @@
     ]
   },
   "daily": {
-    "label": "Daily Change vs 22 Apr 2026",
+    "label": "Daily Change vs 23 Apr 2026",
     "period": "Daily",
     "overview": {
       "netRev": 0,
-      "tac": 2809,
-      "pl": -2809,
+      "tac": 0,
+      "pl": 0,
       "supplyRev": 0,
       "demandRev": 0,
-      "supplyPL": -2809,
+      "supplyPL": 0,
       "demandPL": 0,
       "pacing": null,
       "target": null,
@@ -609,13 +609,13 @@
         "name": "Autos: Clicks",
         "tag": "vt-autos",
         "netRev": 0,
-        "tac": 2809,
-        "pl": -2809,
+        "tac": 0,
+        "pl": 0,
         "pacing": null,
         "target": null,
-        "variance": "-$2,809",
-        "focus": "Down",
-        "focusCls": "focus-high"
+        "variance": "+$0",
+        "focus": "Up",
+        "focusCls": "focus-low"
       },
       {
         "book": "Supply",
@@ -670,6 +670,6 @@
         "focusCls": "focus-low"
       }
     ],
-    "_note": "Delta = 2026-04-23 MTD minus 2026-04-22 MTD. All figures 5% AAC-adjusted from dedicated tabs."
+    "_note": "Delta = 2026-04-24 MTD minus 2026-04-23 MTD. All figures 5% AAC-adjusted from dedicated tabs."
   }
 }
