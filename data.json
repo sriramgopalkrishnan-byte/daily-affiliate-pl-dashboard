@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "Auto-refreshed 24 Apr 2026 1:00pm IST",
-  "refreshDate": "2026-04-24",
+  "lastUpdated": "Auto-refreshed 25 Apr 2026 1:00pm IST",
+  "refreshDate": "2026-04-25",
   "mtd": {
     "overview": {
       "netRev": 531870,
@@ -563,7 +563,7 @@
     ]
   },
   "daily": {
-    "label": "Daily Change vs 23 Apr 2026",
+    "label": "Daily Change vs 24 Apr 2026",
     "period": "Daily",
     "overview": {
       "netRev": 0,
@@ -670,6 +670,6 @@
         "focusCls": "focus-low"
       }
     ],
-    "_note": "Delta = 2026-04-24 MTD minus 2026-04-23 MTD. All figures 5% AAC-adjusted from dedicated tabs."
+    "_note": "Delta = 2026-04-25 MTD minus 2026-04-24 MTD. All figures 5% AAC-adjusted from dedicated tabs."
   }
 }
